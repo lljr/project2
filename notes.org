@@ -95,4 +95,16 @@ touch to your chat application of your choosing!
 
 
 ** Plannning
+
+*** Bootstrap changing active navbar menu item
+I had some issues with changing the navbar active item in the previous project.
+According to this [[https://stackoverflow.com/questions/24514717/bootstrap-navbar-active-state-not-working?rq=1][SO]] post, you need to manage it yourself. (Bootstrap 4)
+
+#+BEGIN_SRC javascript
+$(".nav .nav-link").on("click", function(){
+   $(".nav").find(".active").removeClass("active");
+   $(this).addClass("active");
+});
+#+END_SRC
+
 * README
