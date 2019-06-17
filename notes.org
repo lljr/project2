@@ -16,16 +16,18 @@ Once a channel is selected, users will be able to send and receive
 messages with one another in real time. Finally, you'll add a personal
 touch to your chat application of your choosing!
 
-** Milestones
+** Milestones [0/7]
    :PROPERTIES:
    :CUSTOM_ID: milestones
    :END:
 
-We recommend that you try to meet the following milestones:
-
--  Complete the Display Name, Channel Creation, and Channel List steps.
--  Complete the Messages View and Sending Messages steps.
--  Complete the Remembering the Channel and Personal Touch steps.
+- [ ] Complete the Display Name
+- [ ] Channel Creation
+- [ ] Channel List steps.
+- [ ] Complete the Messages View
+- [ ] Sending Messages steps
+- [ ] Complete the Remembering the Channel
+- [ ] Personal Touch steps
 
 ** Requirements
    :PROPERTIES:
