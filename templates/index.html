@@ -1,5 +1,13 @@
 {% extends "layout.html"%}
 {% block title %}Home{% endblock %}
 {% block main %}
+<form class="form-inline">
+  <div class="form-group mx-sm-3 mb-2">
+    <label for="inputPassword2" class="sr-only">Username</label>
+    <input type="text" class="form-control" id="username" placeholder="Username">
 
+  </div>
+  <button type="submit" class="btn btn-primary mb-2">Submit</button>
+</form>
+        <small id="emailHelp" class="form-text text-muted">This will be your display name.</small>
 {% endblock %}
