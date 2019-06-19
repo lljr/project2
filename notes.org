@@ -108,3 +108,19 @@ $(".nav .nav-link").on("click", function(){
 #+END_SRC
 
 * README
+
+* Dev Notes
+
+** Running Flask in dev environment with WebSocket
+Many errors occur like "Websocket not available". Case discussed
+in this [[https://github.com/miguelgrinberg/Flask-SocketIO/issues/647][Github issue]].
+
+*soln*: =pip install gevent=, allows using =python application.py= with no erorrs.
+
+For some reason, =flask run= does not work.
+
+To run in debug mode, add this at end of =application.py=
+#+BEGIN_SRC python
+if __name__ == '__main__':
+    socketio.run(app, debug=True, host="0.0.0.0")
+#+END_SRC
