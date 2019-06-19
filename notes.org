@@ -33,7 +33,6 @@ touch to your chat application of your choosing!
    :PROPERTIES:
    :CUSTOM_ID: requirements
    :END:
-
 *** TODO *Display Name*: When a user visits your web application for the first
  time, they should be prompted to type in a display name that will
  eventually be associated with every message the user sends. If a user
