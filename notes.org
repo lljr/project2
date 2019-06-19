@@ -117,7 +117,7 @@ in this [[https://github.com/miguelgrinberg/Flask-SocketIO/issues/647][Github is
 
 *soln*: =pip install gevent=, allows using =python application.py= with no erorrs.
 
-For some reason, =flask run= does not work.
+ =flask run= does not work with Websocket cause of package author decision.
 
 To run in debug mode, add this at end of =application.py=
 #+BEGIN_SRC python
