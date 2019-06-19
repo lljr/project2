@@ -1,6 +1,6 @@
 import os
 
-from flask import Flask, render_template, redirect
+from flask import Flask, render_template, redirect, request
 from flask_socketio import SocketIO, emit
 
 app = Flask(__name__)
