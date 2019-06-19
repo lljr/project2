@@ -8,6 +8,6 @@ document.addEventListener('DOMContentLoaded', () => {
   // if username is empty
   // hide channel item in navbar menu
   // else, show it as an option
-
+  // maybe i could use disabled attribute???
 
 });
