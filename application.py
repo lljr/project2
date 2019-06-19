@@ -18,7 +18,7 @@ def after_request(response):
 
 @app.route("/")
 def index():
-    return "Project 2: TODO"
+    return render_template("index.html")
 
 
 if __name__ == '__main__':
