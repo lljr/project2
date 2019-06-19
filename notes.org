@@ -107,7 +107,6 @@ $(".nav .nav-link").on("click", function(){
 #+END_SRC
 
 * README
-
 * Dev Notes
 
 ** Running Flask in dev environment with WebSocket
