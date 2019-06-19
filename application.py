@@ -19,3 +19,7 @@ def after_request(response):
 @app.route("/")
 def index():
     return "Project 2: TODO"
+
+
+if __name__ == '__main__':
+    socketio.run(app, debug=True)
