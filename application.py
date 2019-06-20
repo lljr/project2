@@ -18,10 +18,42 @@ def after_request(response):
     response.headers["Pragma"] = "no-cache"
     return response
 
+users = []
+joined_chats = {}
 
+
+@login_required
 @app.route("/")
 def index():
-    return render_template("index.html")
+
+    return render_template("index.html", username=session["username"])
+
+
+@app.route("/adduser", methods=["POST"])
+def login():
+    # Forget any logged in user
+    session.clear()
+
+    username = request.form.get("username")
+    # Check name not taken already
+    if username not in users:
+        users.append(session["username"])
+
+        # Remember username in session
+        session["username"] = username
+
+        return redirect(url_for('index'))
+
+    return render_template("error.html")
+
+
+@app.route("/leave")
+def logout():
+
+    session.clear()
+
+    return redirect(url_for('login'))
+
 
 
 if __name__ == '__main__':
