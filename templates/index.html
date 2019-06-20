@@ -9,5 +9,11 @@
   </div>
   <button type="submit" class="btn btn-primary mb-2">Submit</button>
 </form>
-        <small id="emailHelp" class="form-text text-muted">This will be your display name.</small>
+
+<!-- let javascript take care of this part....... -->
+<!-- OR, send as query arg from /adduser redirection -->
+{% if username %}
+  <p>Hello, {{username}}</p>
+{% endif %}
+<small id="emailHelp" class="form-text text-muted">This will be your display name.</small>
 {% endblock %}
