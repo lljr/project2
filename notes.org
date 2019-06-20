@@ -109,6 +109,8 @@ $(".nav .nav-link").on("click", function(){
 *** Channel Creation ideas
 1. test submitting different usernames to 127.0.0.1 and 0.0.0.0
 2. check if the usernames are different
+   - with a dictionary at the server that remembers all users
+   - with localStorage that remembers the logged in user
 3. conditinally load menu items like "Join Channels" if the username gets filled
    - maybe using a event listener that checks if the form is complete?
    - maybe sending data to server to a global variable
