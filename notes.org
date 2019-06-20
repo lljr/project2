@@ -130,3 +130,10 @@ To run in debug mode, add this at end of =application.py=
 if __name__ == '__main__':
     socketio.run(app, debug=True, host="0.0.0.0")
 #+END_SRC
+
+** getAttribute() vs .value
+.value gets input value in real time
+
+one is implementation dependent (different browsers) other is standard
+
+detailed explanation [[https://stackoverflow.com/questions/11973678/difference-between-element-value-and-element-getattributevalue][here]]
