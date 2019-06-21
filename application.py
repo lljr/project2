@@ -22,29 +22,35 @@ users = []
 joined_chats = {}
 
 
-@login_required
 @app.route("/")
+@login_required
 def index():
+    # TODO fix KeyError because user has not set name in form
+    # return render_template("index.html", username=session['username'])
+    # NOTE: maybe I can still check for variable assignment in index.html
+    # because it inherits from layout.html -- so I'm guessing it implicitly
+    # renders it as well??
+    return render_template("index.html", channels=session["channels"])
 
-    return render_template("index.html", username=session["username"])
 
-
-@app.route("/adduser", methods=["POST"])
-def login():
+@app.route("/adduser", methods=["GET", "POST"])
+def adduser():
     # Forget any logged in user
     session.clear()
 
     username = request.form.get("username")
     # Check name not taken already
-    if username not in users:
-        users.append(session["username"])
+    if request.method ==  "POST":
 
+        if username not in users:
+            users.append(session['username'])
         # Remember username in session
-        session["username"] = username
+            session["username"] = username
+            session["channels"] = []
 
-        return redirect(url_for('index'))
+            return redirect(url_for('index'))
 
-    return render_template("error.html")
+    return render_template("adduser.html")
 
 
 @app.route("/leave")
