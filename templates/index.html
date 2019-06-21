@@ -16,5 +16,19 @@
 {% if username %}
   <p>Hello, {{username}}</p>
 {% endif %}
+
+{% if not channels%}
+  <p>no channels joined.</p>
+{% else %}
+  <p>you channels</p>
+    <ul>
+  {% for channel in channels %}
+
+      <li>{{channel}}</li>
+
+  {% endfor %}
+    </ul>
+{% endif %}
+
 <small id="emailHelp" class="form-text text-muted">This will be your display name.</small>
 {% endblock %}
