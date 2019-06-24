@@ -61,7 +61,7 @@ def logout():
     """Log user out."""
     session.clear()
 
-    return redirect(url_for('login'))
+    return redirect(url_for('adduser'))
 
 # Maybe I could also create, leave and join a channel here
 @app.route("/channel", methods=["POST", "GET"])
