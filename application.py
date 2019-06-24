@@ -57,12 +57,36 @@ def adduser():
 
 @app.route("/leave")
 def logout():
-
+    """Log user out."""
     session.clear()
 
     return redirect(url_for('login'))
 
+# Maybe I could also create, leave and join a channel here
+@app.route("/channel", methods=["POST", "GET"])
+@login_required
+def channel():
+    """Create, join, or leave a channel."""
 
+    channel = request.form.get("channel")
+    if request.form == "POST":
+        # Check form is not empty
+        if channel is None:
+            return jsonify({"message": "can't send an empty form."})
+        # Check channel has not already been created
+        elif channel in channels:
+            return jsonify({"message": "channel already exists."})
 
+        channels.append(channel)
+
+        return jsonify({"message": "channel created."})
+    else:
+        # NOTE: this depends on opened channel socket.... may need to implement later
+        # Check channel exists
+        # Check channel form not empty
+        # Log out user in channel
+        pass
+
+    # NOTE TO SELF: there is a difference between channels AND  channel(this may need its own view)
 if __name__ == '__main__':
     socketio.run(app, debug=True)
