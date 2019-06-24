@@ -1,6 +1,20 @@
 {% extends "layout.html"%}
-
 {% block title %}Add User{% endblock %}
 {% block main %}
-<p>Enter your display name</p>
+
+  <!-- TODO center these two texts -->
+  <h2>Choose a display name</h2>
+  <small id="emailHelp" class="form-text text-muted">This will be your display name.</small>
+
+  <form action="{{url_for('adduser')}}" method="POST">
+    <div class="row">
+      <div class="col">
+        <input class="form-control" name="username" placeholder="choose display name" type="text">
+      </div>
+      <div class="col">
+        <button type="button" class="btn btn-dark">Submit</button>
+      </div>
+    </div>
+  </form>
+
 {% endblock %}
