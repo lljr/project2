@@ -71,31 +71,27 @@ def logout():
 
     return redirect(url_for('adduser'))
 
-# Maybe I could also create, leave and join a channel here
-@app.route("/channel", methods=["POST", "GET"])
+
+@app.route("/createchannel", methods=["POST"])
 @login_required
-def channel():
-    """Create, join, or leave a channel."""
+def createchannel():
+    """Return a channel by checking it does not exist in local DB."""
 
-    channel = request.form.get("channel")
-    if request.form == "POST":
-        # Check form is not empty
-        if channel is None:
-            return jsonify({"message": "can't send an empty form."})
-        # Check channel has not already been created
-        elif channel in channels:
-            return jsonify({"message": "channel already exists."})
+    channel = request.form.get("channelname")
+    # Check form is not empty
+    if channel is None:
+        return jsonify({"message": "can't send an empty form."})
+    # Check channel has not already been created
+    elif channel in channels:
+        return jsonify({"message": "channel already exists."})
 
-        channels.append(channel)
+    channels.append(channel)
+    print(f"channels are {channels}")
+    return jsonify({
+        "channel": channel,
+        "message": "channel created."
+    })
 
-        return jsonify({"message": "channel created."})
-    else:
-        # NOTE: this depends on opened channel socket.... may need to implement later
-        # Check channel exists
-        # Check channel form not empty
-        # Log out user in channel
-        pass
 
-    # NOTE TO SELF: there is a difference between channels AND  channel(this may need its own view)
 if __name__ == '__main__':
     socketio.run(app, debug=True)
