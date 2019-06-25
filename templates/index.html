@@ -2,22 +2,38 @@
 {% block title %}Home{% endblock %}
 {% block main %}
 
-{% if username %}
-  <p>Hello, {{username}}</p>
-{% endif %}
+  {% if username %}
+    <p>Hello, {{username}}</p>
+  {% endif %}
+  <div class="row">
+    <div class="col">
+      {% if not channels%}
+        <p>No live channels.</p>
+      {% else %}
+        <p>Live channels</p>
+        <ul>
+          {% for channel in channels %}
+            <li>{{channel}}</li>
+          {% endfor %}
+        </ul>
+      {% endif %}
+    </div>
 
-{% if not channels%}
-  <p>no channels joined.</p>
-{% else %}
-  <p>you channels</p>
-    <ul>
-  {% for channel in channels %}
+    <div class="col">
 
-      <li>{{channel}}</li>
+      <form id="channelform">
+        <div class="row">
+          <div class="col">
+            <input id="channelname" class="form-control" placeholder="Create channel" type="text">
+          </div>
+          <div class="col">
+            <button type="submit" class="btn btn-dark">Create</button>
+          </div>
+        </div>
+      </form>
+      <small id="message" class="form-text text-muted"></small>
 
-  {% endfor %}
-    </ul>
-{% endif %}
-
+    </div>
+  </div>
 
 {% endblock %}
