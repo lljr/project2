@@ -51,13 +51,9 @@ def adduser():
 
     username = request.form.get("username")
     # Check name not taken already
-    if request.method ==  "POST":
+    if request.method == "POST":
         if username not in db:
-            db.update({
-                username: {
-                   "channels": []
-                }
-            })
+            db.append(username)
             # Remember username in session
             session["username"] = username
 
