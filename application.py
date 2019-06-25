@@ -33,15 +33,14 @@ def after_request(response):
     response.headers["Pragma"] = "no-cache"
     return response
 
-db = {}
-channels = []
-
 
 @app.route("/")
 @login_required
 def index():
     # TODO fix KeyError because user has not set name in form
-    return render_template("index.html", channels=channels, username=session["username"])
+    return render_template("index.html", channels=channels, username=session[
+        "username"
+    ])
 
 
 @app.route("/adduser", methods=["GET", "POST"])
