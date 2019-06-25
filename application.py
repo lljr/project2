@@ -10,9 +10,18 @@ from json import dumps
 
 app = Flask(__name__)
 app.config["SECRET_KEY"] = os.getenv("SECRET_KEY")
+# app.config.update(
+#     SESSION_PERMANENT=False,
+#     SESSION_TYPE="filesystem",
+#     SESSION_FILE_DIR=mkdtemp()
+# )
+# Session(app)
 socketio = SocketIO(app)
 
-# Dont' cache response for dev purposes
+db = []
+channels = []
+
+
 @app.after_request
 def after_request(response):
     response.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
