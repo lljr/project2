@@ -3,12 +3,12 @@
   :CUSTOM_ID: project-2-flack
   :END:
 
-** Milestones [0/7]
+** Milestones [1/7]
    :PROPERTIES:
    :CUSTOM_ID: milestones
    :END:
 
-- [ ] Complete the Display Name
+- [X] Complete the Display Name
 - [ ] Channel Creation
 - [ ] Channel List steps.
 - [ ] Complete the Messages View
