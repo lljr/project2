@@ -128,5 +128,12 @@ detailed explanation [[https://stackoverflow.com/questions/11973678/difference-b
 ** Bugs
 
 *** index.js
+
 =updateLiveChannelsList= invocation re-inserts list items when newer
 item becomes available in the server
+
+*** index.html
+
+**** TODO cannot persist fetching of channels
+realted to updateLivechannelsList: won't persist channels list even
+though variable in database server does persist
