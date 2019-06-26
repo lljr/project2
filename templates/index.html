@@ -7,16 +7,14 @@
   {% endif %}
   <div class="row">
     <div class="col">
-      {% if not channels%}
-        <p>No live channels.</p>
-      {% else %}
-        <p>Live channels</p>
-        <ul>
-          {% for channel in channels %}
-            <li>{{channel}}</li>
-          {% endfor %}
+
+      <div id="livechannels">
+        <!-- Updated Online Channels -->
+        <ul class="target">
+
         </ul>
-      {% endif %}
+      </div>
+
     </div>
 
     <div class="col">
