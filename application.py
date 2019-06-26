@@ -23,7 +23,7 @@ app.config["SECRET_KEY"] = os.getenv("SECRET_KEY")
 socketio = SocketIO(app)
 
 db = []
-channels = []
+live_channels = set()
 
 
 @app.after_request
