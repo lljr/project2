@@ -38,7 +38,34 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Send request
     request.send(data);
+    document.querySelector("#channelname").value = '';
     return false;
+
+  }
+
+
+  function updateLiveChannelsList() {
+    const request = new XMLHttpRequest();
+    request.open('GET', "/channels")
+
+    request.onload = () => {
+
+      const data = JSON.parse(request.responseText);
+
+      if (data.channels) {
+        data.channels.forEach(channel => {
+          const li = document.createElement('li');
+          li.innerHTML = channel;
+          document.querySelector("#livechannels .target").append(li);
+        })
+      }
+
+      return null;
+
+    }
+
+    request.send();
+    return null;
 
   }
 
