@@ -77,19 +77,31 @@ def createchannel():
     """Return a channel by checking it does not exist in local DB."""
 
     channel = request.form.get("channelname")
-    # Check form is not empty
+    # Check form is not empty TODO do I need this here? or Front End?
     if channel is None:
-        return jsonify({"message": "can't send an empty form."})
-    # Check channel has not already been created
-    elif channel in channels:
-        return jsonify({"message": "channel already exists."})
+        return jsonify({
+            "success": False,
+            "message": "Can't send an empty form."
+        })
 
-    channels.append(channel)
-    print(f"channels are {channels}")
+    # Check channel has not already been created
+    elif channel in live_channels:
+        return jsonify({
+            "success": False,
+            "message": "Channel already exists."
+        })
+
+    live_channels.add(channel)
     return jsonify({
-        "channel": channel,
-        "message": "channel created."
+        "success": True,
+        "message": "Channel created."
     })
+
+
+@app.route("/channels")
+@login_required
+def channels():
+    return jsonify({"channels": list(live_channels)})
 
 
 if __name__ == '__main__':
