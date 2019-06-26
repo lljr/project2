@@ -37,8 +37,7 @@ def after_request(response):
 @app.route("/")
 @login_required
 def index():
-    # TODO fix KeyError because user has not set name in form
-    return render_template("index.html", channels=channels, username=session[
+    return render_template("index.html", username=session[
         "username"
     ])
 
