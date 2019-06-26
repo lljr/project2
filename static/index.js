@@ -1,9 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
 
-  // if (!localStorage.getItem('username')) {
-  //   localStorage.setItem('username', () => {
-  //   })
-  // }
   // Send request to create a channel
   document.querySelector("#channelform").onsubmit = () => {
 
