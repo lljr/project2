@@ -133,6 +133,7 @@ detailed explanation [[https://stackoverflow.com/questions/11973678/difference-b
 item becomes available in the server
 
 **** FIX clear out existing table data
+by removing all firstChild of =ul= element
 *** index.html
 
 **** DONE cannot persist fetching of channels
