@@ -52,7 +52,6 @@ def adduser():
     if request.method == "POST":
         username = request.form.get("username")
 
-        # TODO Use a set
         if username not in users_db:
             users_db.add(username)
 
