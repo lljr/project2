@@ -132,8 +132,15 @@ detailed explanation [[https://stackoverflow.com/questions/11973678/difference-b
 =updateLiveChannelsList= invocation re-inserts list items when newer
 item becomes available in the server
 
+**** FIX clear out existing table data
 *** index.html
 
-**** TODO cannot persist fetching of channels
+**** DONE cannot persist fetching of channels
+     - Note taken on [2019-07-02 mar 10:45] \\
+       at first I thought this may be solved with localStorage
+
+       but then I realized that I need to fetch the updated liv echannels
+
+       after successful insertion as well as after loading the page.
 realted to updateLivechannelsList: won't persist channels list even
 though variable in database server does persist
