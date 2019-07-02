@@ -59,6 +59,8 @@ def adduser():
             session["username"] = username
 
             return redirect(url_for('index'))
+        else:
+            return render_template("error.html")
 
     else:
         return render_template("adduser.html")
