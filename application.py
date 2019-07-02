@@ -2,7 +2,7 @@ import os
 
 from flask import Flask, render_template, redirect, request, session, \
     jsonify, url_for
-from flask_socketio import SocketIO, emit
+from flask_socketio import SocketIO, emit, join_room, leave_room
 # from tempfile import mkdtemp
 
 # from flask_session import Session
