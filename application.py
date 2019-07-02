@@ -48,19 +48,21 @@ def adduser():
     # Forget any logged in user
     session.clear()
 
-    username = request.form.get("username")
     # Check name not taken already
     if request.method == "POST":
-        if username not in db:
-            db.append(username)
+        username = request.form.get("username")
+
+        # TODO Use a set
+        if username not in users_db:
+            users_db.add(username)
+
             # Remember username in session
             session["username"] = username
 
-            print(dumps(db, sort_keys=True, default="str", indent=4))
-
             return redirect(url_for('index'))
 
-    return render_template("adduser.html")
+    else:
+        return render_template("adduser.html")
 
 
 @app.route("/leave")
