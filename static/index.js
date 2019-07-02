@@ -9,15 +9,22 @@ document.addEventListener('DOMContentLoaded', () => {
     request.open('POST',"/createchannel");
 
     request.onload = () => {
-      const data = JSON.parse(request.responseText);
 
-      if (data.success) {
-        document.querySelector('#message').innerHTML = `${data.message}`;
-        updateLiveChannelsList();
+      try {
+        const data = JSON.parse(request.responseText);
+        if (data.success) {
+          document.querySelector('#message').innerHTML = `${data.message}`;
+          updateLiveChannelsList();
+        }
+        else {
+          document.querySelector('#message').innerHTML = `There was an error`;
+        }
+
+      } catch(e) {
+        console.warn("There was an error!");
       }
-      else {
-        document.querySelector('#message').innerHTML = `There was an error`;
-      }
+
+
     };
 
     const data = new FormData();
@@ -30,22 +37,38 @@ document.addEventListener('DOMContentLoaded', () => {
 
   }
 
+  updateLiveChannelsList();
 
   function updateLiveChannelsList() {
+    // TODO Make function accept json as formal parameter to reduce logic burden on this function
     const request = new XMLHttpRequest();
+
     request.open('GET', "/channels")
 
     request.onload = () => {
 
-      const data = JSON.parse(request.responseText);
+      let targetBody = document.querySelector("#livechannels .target")
 
-      if (data.channels) {
-        data.channels.forEach(channel => {
-          const li = document.createElement('li');
-          li.innerHTML = channel;
-          document.querySelector("#livechannels .target").append(li);
-        })
+      // Clears out existing list data
+      while (targetBody.firstChild) {
+        targetBody.removeChild(targetBody.firstChild);
       }
+
+      try {
+        const data = JSON.parse(request.responseText);
+        // Populate live channels list
+        if (data.channels) {
+          data.channels.forEach(channel => {
+            const li = document.createElement('li');
+            li.innerHTML = channel;
+            targetBody.append(li);
+          })
+        }
+
+      } catch(e) {
+        console.warn("there may have been a NetworkError");
+      }
+
 
       return null;
 
