@@ -47,11 +47,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
     request.onload = () => {
 
-      let targetBody = document.querySelector("#livechannels .target")
+      let target = document.querySelector("#livechannels .target")
 
       // Clears out existing list data
-      while (targetBody.firstChild) {
-        targetBody.removeChild(targetBody.firstChild);
+      while (target.firstChild) {
+        target.removeChild(target.firstChild);
       }
 
       try {
