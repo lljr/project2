@@ -106,6 +106,13 @@ def createchannel():
 def channels():
     return jsonify({"channels": list(live_channels)})
 
+@app.route("/chat/<channelname>")
+@login_required
+def chat(channelname):
+    """Show room messages."""
+
+    return render_template("chat.html", channel_name=channelname)
+
 
 if __name__ == '__main__':
     socketio.run(app, debug=True)
