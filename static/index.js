@@ -59,9 +59,20 @@ document.addEventListener('DOMContentLoaded', () => {
         // Populate live channels list
         if (data.channels) {
           data.channels.forEach(channel => {
-            const li = document.createElement('li');
-            li.innerHTML = channel;
-            targetBody.append(li);
+            const cardDiv = document.querySelector("#livechannels");
+            cardDiv.setAttribute("class", "card");
+
+            const li = document.createElement("li");
+            const joinButton = document.createElement("button");
+
+            joinButton.innerHTML = "Join";
+            joinButton.setAttribute("class", "btn btn-primary ml-auto");
+            joinButton.setAttribute("type", "button");
+
+            li.setAttribute("class", "list-group-item d-flex align-items-center");
+            li.append(channel, joinButton);
+
+            target.append(li);
           })
         }
 
