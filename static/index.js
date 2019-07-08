@@ -86,9 +86,31 @@ document.addEventListener('DOMContentLoaded', () => {
 
     }
 
+
+
     request.send();
     return null;
 
   }
+
+  function enterChat(name) {
+
+    // Send request to chat room view
+    const request = new XMLHttpRequest();
+    request.open("GET", `/chat/${channelName}`);
+
+    // TODO open socket to room
+    joinRoomChannel(name);
+
+    request.send();
+    return null;
+
+  }
+
+  function joinRoomChannel(roomName) {
+    // TODO implement this seperately and load the function in this file....
+    return null;
+  }
+
 
 });
