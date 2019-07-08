@@ -3,13 +3,12 @@
 {% block main %}
 
   <!-- TODO center these two texts -->
-  <h2>Choose a display name</h2>
-  <small id="emailHelp" class="form-text text-muted">This will be your display name.</small>
+  <h2 class="pb-2">Choose a display name</h2>
 
   <form action="{{url_for('adduser')}}" method="POST">
     <div class="row">
       <div class="col">
-        <input class="form-control" name="username" placeholder="choose display name" type="text">
+        <input class="form-control" name="username" placeholder="Enter display name" type="text">
       </div>
       <div class="col">
         <button type="submit" class="btn btn-dark">Submit</button>
