@@ -68,6 +68,7 @@ document.addEventListener('DOMContentLoaded', () => {
             joinButton.innerHTML = "Join";
             joinButton.setAttribute("class", "btn btn-primary ml-auto");
             joinButton.setAttribute("type", "button");
+            joinButton.addEventListener("click", () => { enterChat(channel) });
 
             li.setAttribute("class", "list-group-item d-flex align-items-center");
             li.append(channel, joinButton);
