@@ -106,7 +106,7 @@ def createchannel():
 def channels():
     return jsonify({"channels": list(live_channels)})
 
-@app.route("/chat/<channelname>")
+@app.route("/channel/<channelname>")
 @login_required
 def chat(channelname):
     """Show room messages."""
