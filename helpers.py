@@ -1,4 +1,5 @@
 from flask import session, redirect, url_for
+from flask_socketio import disconnect
 
 from functools import wraps
 
@@ -12,3 +13,14 @@ def login_required(f):
         return f(*args, **kwargs)
 
     return decorated_function
+
+
+def authenticated_only(f):
+    """Disconnect a user that has logged in."""
+    @wraps(f)
+    def wrapped(*args, **kwargs):
+        if session.get("username") is None:
+            disconnect()
+        else:
+            return f(*args, **kwargs)
+    return wrapped
