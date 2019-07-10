@@ -114,5 +114,27 @@ def chat(channelname):
     return render_template("chat.html", channel_name=channelname)
 
 
+@socketio.on('connect')
+@authenticated_only
+def connect_handler():
+    """Connect a user to socket."""
+    emit('my response',
+         {'message': 'Welcome to Flack!!!'})
+
+
+@socketio.on('join')
+@authenticated_only
+def on_join(data):
+    """Join user to chat room."""
+    username = session['username']
+    if room in live_channels:
+        join_room(room)
+        room = data['room']
+        send(username + ' has entered the room.', room=room)
+    else:
+        send("{room} channel does not exist.")
+        # TODO flash with error message???
+
+
 if __name__ == '__main__':
     socketio.run(app, debug=True)
