@@ -68,7 +68,7 @@ document.addEventListener('DOMContentLoaded', () => {
             joinButton.innerHTML = "Join";
             joinButton.setAttribute("class", "btn btn-primary ml-auto");
             joinButton.setAttribute("type", "button");
-            joinButton.addEventListener("click", () => { enterChat(channel) });
+            joinButton.addEventListener("click", function() { enterChat(channel).bind(this) });
 
             li.setAttribute("class", "list-group-item d-flex align-items-center");
             li.append(channel, joinButton);
@@ -97,20 +97,38 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Send request to chat room view
     const request = new XMLHttpRequest();
-    request.open("GET", `/chat/${channelName}`);
+    request.open("GET", `/channel/${channelName}`);
+    const buttonThis = this;
 
-    // TODO open socket to room
-    joinRoomChannel(name);
+    request.onload = function() {
+      // TODO open socket to room
+      joinRoomChannel(name).bind(buttonThis);
+    }
 
     request.send();
     return null;
 
   }
 
+  // Connect to websocket
+  var socket = io.connect(location.protocol + '//' + document.domain + ':' + location.port);
+
+  // When connected, configure buttons
+  socket.on('connect', () => {
+    socket.emit('join', {'room': roomName}); // TODO what happens when a person connects to Chat app?
+  });
+
   function joinRoomChannel(roomName) {
     // TODO implement this seperately and load the function in this file....
+
+    // When a new vote is announced, add to the unordered list
+    socket.on('join', () => {
+          const li = document.createElement('li');
+          li.innerHTML = `Vote recorded: ${data.selection}`;
+          document.querySelector('#votes').append(li);
+      });
+
     return null;
   }
-
 
 });
