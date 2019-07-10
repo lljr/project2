@@ -7,7 +7,7 @@ from flask_socketio import SocketIO, emit, join_room, leave_room
 
 # from flask_session import Session
 
-from helpers import login_required
+from helpers import login_required, authenticated_only
 
 from json import dumps
 
