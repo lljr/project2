@@ -112,8 +112,7 @@ def channels():
 @app.route("/channel/<channelname>")
 @login_required
 def chat(channelname):
-    """Show room messages."""
-
+    """Show chat room messages."""
     return render_template("chat.html", channel_name=channelname)
 
 
