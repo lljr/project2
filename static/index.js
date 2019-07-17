@@ -16,11 +16,11 @@ document.addEventListener('DOMContentLoaded', () => {
           updateLiveChannelsList();
         }
         else {
-          document.querySelector('#message').innerHTML = `There was an error`;
+          document.querySelector('#message').innerHTML = `${data.message}`;
         }
 
       } catch(e) {
-        console.warn("There was an error!");
+        console.warn("There was a NetworkError.");
       }
 
 
