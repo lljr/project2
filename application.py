@@ -104,6 +104,7 @@ def createchannel():
     })
 
 
+# TODO remove this route by using localStorage on client
 @app.route("/channels")
 @login_required
 def channels():
