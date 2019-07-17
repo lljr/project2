@@ -46,6 +46,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     request.onload = () => {
 
+      // TODO check the response from the server whether channels exists
+      // to prevent adding the button to the DOM
+
       let target = document.querySelector("#livechannels .target")
 
       // Clears out existing list data
