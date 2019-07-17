@@ -80,8 +80,11 @@ def createchannel():
     """Return a channel by checking it does not exist in local DB."""
 
     channel = request.form.get("channelname")
-    # Check form is not empty TODO do I need this here? or Front End?
-    if channel is None:
+
+    # Notify user when sending empty form data
+    # Note to self... when sending data with JS FromData, the key entry gets
+    # assign an empty string with empty text input
+    if not channel:
         return jsonify({
             "success": False,
             "message": "Can't send an empty form."
