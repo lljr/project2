@@ -2,7 +2,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Send request to create a channel
   document.querySelector("#channelform").onsubmit = () => {
-
     // Initialize request
     const request = new XMLHttpRequest();
     const channelName = document.querySelector("#channelname").value;
