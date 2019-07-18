@@ -60,9 +60,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
       try {
         const data = JSON.parse(request.responseText);
+
         // Populate live channels list
         if (data.channels) {
-          data.channels.forEach(channel => {
+          data.channels.forEach((channel, index) => {
             const cardDiv = document.querySelector("#livechannels");
             cardDiv.setAttribute("class", "card");
 
