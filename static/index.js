@@ -120,18 +120,27 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // When connected, configure buttons
   socket.on('connect', () => {
-    socket.emit('join', {'room': roomName}); // TODO what happens when a person connects to Chat app?
+    console.log('im connected yo');
+
+    // socket.emit('join', {'room': roomName});
   });
+
+  socket.on('my response', data => {
+    console.log('im connected yo');
+    console.log(`and this is the message from server: ${data.message}`);
+
+  });
+
 
   function joinRoomChannel(roomName) {
     // TODO implement this seperately and load the function in this file....
 
     // When a new vote is announced, add to the unordered list
     socket.on('join', () => {
-          const li = document.createElement('li');
-          li.innerHTML = `Vote recorded: ${data.selection}`;
-          document.querySelector('#votes').append(li);
-      });
+      const li = document.createElement('li');
+      li.innerHTML = `Vote recorded: ${data.selection}`;
+      document.querySelector('#votes').append(li);
+    });
 
     return null;
   }
