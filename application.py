@@ -104,6 +104,7 @@ def createchannel():
 def channels():
     return jsonify({"channels": list(live_channels)})
 
+
 @app.route("/channel/<channelname>")
 @login_required
 def chat(channelname):
