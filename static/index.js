@@ -93,16 +93,9 @@ document.addEventListener('DOMContentLoaded', () => {
         console.warn("there may have been a NetworkError");
       }
 
-
-      return null;
-
     }
 
-
-
     request.send();
-    return null;
-
   }
 
   function enterChat(name) {
