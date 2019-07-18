@@ -2,24 +2,18 @@ import os
 
 from flask import Flask, render_template, redirect, request, session, \
     jsonify, url_for
-from flask_socketio import SocketIO, emit, join_room, leave_room
+
+from flask_socketio import SocketIO, emit, join_room, leave_room, send
 # from tempfile import mkdtemp
 
 # from flask_session import Session
 
 from helpers import login_required, authenticated_only
 
-from json import dumps
-
+# from json import dumps
 
 app = Flask(__name__)
 app.config["SECRET_KEY"] = os.getenv("SECRET_KEY")
-# app.config.update(
-#     SESSION_PERMANENT=False,
-#     SESSION_TYPE="filesystem",
-#     SESSION_FILE_DIR=mkdtemp()
-# )
-# Session(app)
 socketio = SocketIO(app)
 
 users_db = set()
