@@ -73,9 +73,16 @@ document.addEventListener('DOMContentLoaded', () => {
             joinButton.innerHTML = "Join";
             joinButton.setAttribute("class", "btn btn-primary ml-auto");
             joinButton.setAttribute("type", "button");
+            // NOTE the reason I was trying to grab the context on the fired event object
+            // is to pass the name of the innerText of `joinButton` to bind it to `channel` in `enterChat`
+
+            // NOTE 2: I could add the eventListener on the `ul` list instead of adding them independently to each `li` elt
+            // by using Event Delegation
             joinButton.addEventListener("click", function() { enterChat(channel).bind(this) });
 
             li.setAttribute("class", "list-group-item d-flex align-items-center");
+            li.setAttribute("id", `channel-item-${index}`);
+            li.setAttribute("data-channel", `${channel}`);
             li.append(channel, joinButton);
 
             target.append(li);
