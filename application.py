@@ -123,15 +123,19 @@ def connect_handler():
 @socketio.on('join')
 @authenticated_only
 def on_join(data):
-    """Join user to chat room."""
-    username = session['username']
-    if room in live_channels:
-        join_room(room)
-        room = data['room']
-        send(username + ' has entered the room.', room=room)
-    else:
-        send("{room} channel does not exist.")
-        # TODO flash with error message???
+    username = data['username']
+    room = data['room']
+    join_room(room)
+    send(username + ' has entered the room.', room=room)
+
+
+@socketio.on('leave')
+@authenticated_only
+def on_leave(data):
+    username = data['username']
+    room = data['room']
+    leave_room(room)
+    send(username + ' has left the room.', room=room)
 
 
 if __name__ == '__main__':
