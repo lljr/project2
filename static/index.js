@@ -29,6 +29,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const data = new FormData();
     data.append('channelname', channelName);
 
+    console.log(`channelname is ${JSON.stringify(data)}`);
+
     // Send request
     request.send(data);
     document.querySelector("#channelname").value = '';
