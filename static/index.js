@@ -78,7 +78,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
             // NOTE 2: I could add the eventListener on the `ul` list instead of adding them independently to each `li` elt
             // by using Event Delegation
-            joinButton.addEventListener("click", function() { enterChat(channel).bind(this) });
+            // https://davidwalsh.name/event-delegate
+            joinButton.addEventListener("click", function(event) { enterChat(channel).bind(this) });
 
             li.setAttribute("class", "list-group-item d-flex align-items-center");
             li.setAttribute("id", `channel-item-${index}`);
