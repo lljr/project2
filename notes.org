@@ -127,7 +127,7 @@ detailed explanation [[https://stackoverflow.com/questions/11973678/difference-b
 
 ** Bugs
 
-*** index.js [1/2]
+*** index.js [2/3]
 
  - [X] =updateLiveChannelsList= invocation re-inserts list items when newer
 item becomes available in the server-side
