@@ -135,7 +135,7 @@ item becomes available in the server-side
 - [ ] before login, several tags are not defined, maybe seperate each function by loading it
 by its corresponding view
 
-- [ ] the "create channel" form allows entering empty fields
+- [X] the "create channel" form allows entering empty fields
 
 **** FIX clear out existing table data
 by removing all firstChild of =ul= element
