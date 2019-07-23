@@ -36,7 +36,7 @@ def index():
 
 @app.route("/adduser", methods=["GET", "POST"])
 def adduser():
-    """Add user to chat."""
+    """Log in user to chat."""
 
     # Forget any logged in user
     session.clear()
