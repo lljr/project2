@@ -28,33 +28,29 @@ def after_request(response):
 @app.route("/")
 @login_required
 def index():
+    """Renders main page."""
     return render_template("index.html", username=session[
         "username"
     ])
 
 
-@app.route("/adduser", methods=["GET", "POST"])
+@app.route("/adduser", methods=["POST"])
 def adduser():
-    """User chooses a display name."""
+    """Add user to chat."""
+
     # Forget any logged in user
     session.clear()
 
-    # Check name not taken already
-    if request.method == "POST":
-        username = request.form.get("username")
+    username = request.form.get("username")
+    if username not in users_db:
+        users_db.add(username)
 
-        if username not in users_db:
-            users_db.add(username)
+        # Remember username in session
+        session["username"] = username
 
-            # Remember username in session
-            session["username"] = username
-
-            return redirect(url_for('index'))
-        else:
-            return render_template("error.html")
-
+        return redirect(url_for('index'))
     else:
-        return render_template("adduser.html")
+        return render_template("error.html")
 
 
 @app.route("/leave")
