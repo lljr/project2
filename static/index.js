@@ -132,7 +132,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   });
 
-  //  socket.emit('join', roomNum); joinning a room on the client side
+
   function joinRoomChannel(roomName) {
     // TODO implement this seperately and load the function in this file....
 

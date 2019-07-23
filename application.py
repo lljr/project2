@@ -28,6 +28,7 @@ def after_request(response):
 @app.route("/")
 @login_required
 def index():
+    """Renders main page."""
     return render_template("index.html", username=session[
         "username"
     ])
@@ -35,14 +36,12 @@ def index():
 
 @app.route("/adduser", methods=["GET", "POST"])
 def adduser():
-    """User chooses a display name."""
+    """Log in user to chat."""
+
     # Forget any logged in user
     session.clear()
-
-    # Check name not taken already
     if request.method == "POST":
         username = request.form.get("username")
-
         if username not in users_db:
             users_db.add(username)
 
@@ -52,9 +51,8 @@ def adduser():
             return redirect(url_for('index'))
         else:
             return render_template("error.html")
-
     else:
-        return render_template("adduser.html")
+        render_template("adduser.html")
 
 
 @app.route("/leave")
