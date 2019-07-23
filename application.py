@@ -34,23 +34,25 @@ def index():
     ])
 
 
-@app.route("/adduser", methods=["POST"])
+@app.route("/adduser", methods=["GET", "POST"])
 def adduser():
     """Add user to chat."""
 
     # Forget any logged in user
     session.clear()
+    if request.method == "POST":
+        username = request.form.get("username")
+        if username not in users_db:
+            users_db.add(username)
 
-    username = request.form.get("username")
-    if username not in users_db:
-        users_db.add(username)
+            # Remember username in session
+            session["username"] = username
 
-        # Remember username in session
-        session["username"] = username
-
-        return redirect(url_for('index'))
+            return redirect(url_for('index'))
+        else:
+            return render_template("error.html")
     else:
-        return render_template("error.html")
+        render_template("adduser.html")
 
 
 @app.route("/leave")
