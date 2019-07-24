@@ -40,7 +40,9 @@ def adduser():
 
     # Forget any logged in user
     session.clear()
-    if request.method == "POST":
+    if request.method == "GET":
+        return render_template("adduser.html")
+    else:
         username = request.form.get("username")
         if username not in users_db:
             users_db.add(username)
@@ -50,9 +52,8 @@ def adduser():
 
             return redirect(url_for('index'))
         else:
+            # TODO Add message that username already exists
             return render_template("error.html")
-    else:
-        render_template("adduser.html")
 
 
 @app.route("/leave")
@@ -63,48 +64,39 @@ def logout():
     return redirect(url_for('adduser'))
 
 
-@app.route("/createchannel", methods=["POST"])
-@login_required
-def createchannel():
-    """Return a channel by checking it does not exist in local DB."""
-
-    channel = request.form.get("channelname")
-
-    # Notify user when sending empty form data
-    # Note to self... when sending data with JS FromData, the key entry gets
-    # assign an empty string with empty text input
-    if not channel:
-        return jsonify({
-            "success": False,
-            "message": "Can't send an empty form."
-        })
-
-    # Check channel has not already been created
-    elif channel in live_channels:
-        return jsonify({
-            "success": False,
-            "message": "Channel already exists."
-        })
-
-    live_channels.add(channel)
-    return jsonify({
-        "success": True,
-        "message": "Channel created."
-    })
-
-
-# TODO remove this route by using localStorage on client
-@app.route("/channels")
-@login_required
-def channels():
-    return jsonify({"channels": list(live_channels)})
-
-
 @app.route("/channel/<channelname>")
 @login_required
 def chat(channelname):
     """Show chat room messages."""
     return render_template("chat.html", channel_name=channelname)
+
+@socketio.on('create channel')
+@authenticated_only
+def channel(data):
+    """User attempts to create a channel."""
+
+    channel = data['channel']
+    # Notify user when sending empty form data
+    # Note to self: when sending data with JS `FromData' object, the key gets
+    # assigned an empty string as its value when submitting empty form
+    if not channel:
+        emit('channel created?', {
+            'message': "You sent an empty form",
+            'channel': ""
+        })
+
+    # Check channel has not already been created
+    elif channel in live_channels:
+        emit('channel created?',{
+            "message": "Channel already exists.",
+            'channel': ""
+        })
+
+    live_channels.add(channel)
+    emit('channel created?',{
+        "message": "Channel created.",
+        'channel': channel
+    })
 
 
 @socketio.on('connect')
