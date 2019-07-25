@@ -69,6 +69,14 @@ def chat(channelname):
     """Show chat room messages."""
     return render_template("chat.html", channel_name=channelname)
 
+
+@socketio.on('connect')
+@authenticated_only
+def connect_handler():
+    """Connect a user to socket."""
+    emit("channels", {"channels": list(live_channels)})
+
+
 @socketio.on('create channel')
 @authenticated_only
 def channel(data):
