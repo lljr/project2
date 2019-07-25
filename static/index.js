@@ -5,22 +5,20 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // When connected, configure buttons
   socket.on('connect', () => {
-    if(!localStorage.getArray("channels")) {
-      localStorage.setItem("channels", "[]");
-    } else if (localStorage.getArray("channels").length > 0) {
-      //Refresh channels list from localStorage
-      const ul = document.querySelector("#livechannels > ul");
-      // Clears out existing list data on the channel list card component
-      // TODO fix bug it is inserting each entry 3 times
-      while (ul.firstChild) {
-        ul.removeChild(ul.firstChild);
-      }
 
+    const ul = document.querySelector("#livechannels > ul");
+    if(!localStorage.getArray("channels")) {
+      console.log("i connected");
+      localStorage.setItem("channels", "[]");
+    }
+    // Persist channels list after page refresh
+    else if (localStorage.getArray("channels").length) {
+      clearOutListData(ul);
+      console.log("i refreshed")
       const channelsArray = localStorage.getArray("channels");
       channelsArray.forEach(channel => updateChannelsList(channel, ul));
       // https://davidwalsh.name/event-delegate
-      // cardDivUl.addEventListener("click", event => enterChat(channel, event.ulChannelElement));
-
+      // Ul.addEventListener("click", event => enterChat(channel, event.ChannelElement));
     }
 
     document.querySelector("#channelform").onsubmit = () => {
