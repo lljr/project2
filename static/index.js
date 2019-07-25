@@ -38,18 +38,33 @@ document.addEventListener('DOMContentLoaded', () => {
 
   });
 
+
   socket.on('channel created?', data => {
     document.querySelector('#message').innerHTML = `${data.message}`;
 
     // Assume data.channel comes empty when channel already exists
     // if not then update the channels list by appending the last channel
-    if (data.channel) {
+    if (data.channel)
       updateChannelsList(data.channel,
                          document.querySelector("#livechannels > ul"),
                          updateStorage="yes");
-    }
   });
 
+  socket.on("channels", data => {
+
+    //Sync server and client on first login
+    const channels = data.channels;
+
+    // There are channels in server and storage is empty (first login or user deleted it?)
+    if (data.channels && !localStorage.getArray("channels").length) {
+      console.log('fetching channels...')
+      const ul = document.querySelector("#livechannels > ul");
+      clearOutListData(ul)
+      channels.forEach(channel => updateChannelsList(channel,
+                                                    ul,
+                                                    updateStorage="yes"));
+    }
+  });
 
   function updateChannelsList(channelName, ul, updateStorage="no") {
 
