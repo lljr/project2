@@ -18,10 +18,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
       const channelsArray = localStorage.getArray("channels");
       channelsArray.forEach(channel => updateChannelsList(channel, ul));
-    }
+      // https://davidwalsh.name/event-delegate
+      // cardDivUl.addEventListener("click", event => enterChat(channel, event.ulChannelElement));
 
-    // https://davidwalsh.name/event-delegate
-    // cardDivUl.addEventListener("click", event => enterChat(channel, event.ulChannelElement));
+    }
 
     document.querySelector("#channelform").onsubmit = () => {
       const channelNameInput = document.querySelector("#channelname");
