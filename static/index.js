@@ -104,23 +104,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
   }
 
-
-
-  function joinRoomChannel(roomName) {
-    // TODO implement this seperately and load the function in this file....
-
-    // When a new vote is announced, add to the unordered list
-    socket.on('join', () => {
-      const li = document.createElement('li');
-      li.innerHTML = `Vote recorded: ${data.selection}`;
-      document.querySelector('#votes').append(li);
-    });
-
-  }
-
   // ======= Storage helper functions start here =======
   // https://stackoverflow.com/a/23516713
-
   Storage.prototype.getArray = function(arrayName) {
     var thisArray = [];
     var fetchArrayObject = this.getItem(arrayName);
