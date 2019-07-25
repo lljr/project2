@@ -94,24 +94,17 @@ def channel(data):
 
     # Check channel has not already been created
     elif channel in live_channels:
-        emit('channel created?',{
+        emit('channel created?', {
             "message": "Channel already exists.",
             'channel': ""
         })
     else:
         live_channels.add(channel)
-        emit('channel created?',{
+        emit('channel created?', {
             "message": "Channel created.",
             'channel': channel
-        })
-
-
-@socketio.on('connect')
-@authenticated_only
-def connect_handler():
-    """Connect a user to socket."""
-    emit('my response',
-         {'message': 'Welcome to Flack!!!'})
+        },
+             broadcast=True)
 
 
 @socketio.on('join')
