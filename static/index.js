@@ -44,17 +44,21 @@ document.addEventListener('DOMContentLoaded', () => {
     // Assume data.channel comes empty when channel already exists
     // if not then update the channels list by appending the last channel
     if (data.channel) {
-      updateChannelsList(data.channel, document.querySelector("#livechannels > ul"));
+      updateChannelsList(data.channel,
+                         document.querySelector("#livechannels > ul"),
+                         updateStorage="yes");
     }
-  })
+  });
 
-  function updateChannelsList(channelName, ul) {
+
+  function updateChannelsList(channelName, ul, updateStorage="no") {
 
     // TODO The Join button only needs to be created once?
     const joinButton = document.createElement("button");
     setUpJoinChannelButton(joinButton)
 
-    localStorage.pushArrayItem('channels', channelName);
+    if (updateStorage === "yes")
+      localStorage.pushArrayItem('channels', channelName);
 
     const li = document.createElement("li");
     setUpChannelListElement(li, joinButton, channelName);
