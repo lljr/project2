@@ -71,6 +71,13 @@ document.addEventListener('DOMContentLoaded', () => {
     ul.append(li);
   }
 
+  function clearOutListData(ul) {
+    // Clears out existing list data `li` on a `ul` parent node
+    while (ul.firstChild) {
+      ul.removeChild(ul.firstChild);
+    }
+  }
+
   function setUpJoinChannelButton(button) {
     button.innerHTML = "Join";
     button.setAttribute("class", "btn btn-primary ml-auto");
