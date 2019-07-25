@@ -56,7 +56,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const channels = data.channels;
 
     // There are channels in server and storage is empty (first login or user deleted it?)
-    if (data.channels && !localStorage.getArray("channels").length) {
+    if (data.channels.length && !localStorage.getArray("channels").length) {
       console.log('fetching channels...')
       const ul = document.querySelector("#livechannels > ul");
       clearOutListData(ul)
