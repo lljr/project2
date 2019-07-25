@@ -87,6 +87,7 @@ document.addEventListener('DOMContentLoaded', () => {
   function enterChat(name, clickedEl) {
 
     // Make sure an `li` element gets clicked
+    // TODO make sure `button` element gets clicked
     if (clickedEl.nodeName == "LI") {
       const channelName = clickedEl.dataset.channel
       // Send request to chat room view
