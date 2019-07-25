@@ -49,7 +49,6 @@ def adduser():
 
             # Remember username in session
             session["username"] = username
-
             return redirect(url_for('index'))
         else:
             # TODO Add message that username already exists
