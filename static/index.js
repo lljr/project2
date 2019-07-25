@@ -66,6 +66,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
+  // TODO When logging out, clear localStorage
   function updateChannelsList(channelName, ul, updateStorage="no") {
 
     // TODO The Join button only needs to be created once?
