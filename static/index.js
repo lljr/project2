@@ -7,7 +7,7 @@ document.addEventListener('DOMContentLoaded', () => {
   socket.on('connect', () => {
     if(!localStorage.getArray("channels")) {
       localStorage.setItem("channels", "[]");
-    } else {
+    } else if (localStorage.getArray("channels").length > 0) {
       //Refresh channels list from localStorage
       const ul = document.querySelector("#livechannels > ul");
       // Clears out existing list data on the channel list card component
