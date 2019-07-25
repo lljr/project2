@@ -91,12 +91,12 @@ def channel(data):
             "message": "Channel already exists.",
             'channel': ""
         })
-
-    live_channels.add(channel)
-    emit('channel created?',{
-        "message": "Channel created.",
-        'channel': channel
-    })
+    else:
+        live_channels.add(channel)
+        emit('channel created?',{
+            "message": "Channel created.",
+            'channel': channel
+        })
 
 
 @socketio.on('connect')
