@@ -67,7 +67,6 @@ def handle_channel(data):
 
 
 @socketio.on('join')
-@authenticated_only
 def on_join(data):
     username = data['username']
     room = data['room']
@@ -75,8 +74,13 @@ def on_join(data):
     send(username + ' has entered the room.', room=room)
 
 
+@socketio.on('message')
+def handle_message(data):
+    """Send messages to rooms."""
+    pass
+
+
 @socketio.on('leave')
-@authenticated_only
 def on_leave(data):
     username = data['username']
     room = data['room']
