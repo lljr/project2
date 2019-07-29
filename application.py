@@ -17,69 +17,30 @@ users_db = set()
 live_channels = set()
 
 
-@app.after_request
-def after_request(response):
-    response.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
-    response.headers["Expires"] = 0
-    response.headers["Pragma"] = "no-cache"
-    return response
-
-
 @app.route("/")
-@login_required
 def index():
     """Renders main page."""
-    return render_template("index.html", username=session[
-        "username"
-    ])
-
-
-@app.route("/adduser", methods=["GET", "POST"])
-def adduser():
-    """Log in user to chat."""
-
-    # Forget any logged in user
-    session.clear()
-    if request.method == "GET":
-        return render_template("adduser.html")
-    else:
-        username = request.form.get("username")
-        if username not in users_db:
-            users_db.add(username)
-
-            # Remember username in session
-            session["username"] = username
-            return redirect(url_for('index'))
-        else:
-            # TODO Add message that username already exists
-            return render_template("error.html")
-
-
-@app.route("/leave")
-def logout():
-    """Log user out."""
-    session.clear()
-
-    return redirect(url_for('adduser'))
-
-
-@app.route("/channel/<channelname>")
-@login_required
-def chat(channelname):
-    """Show chat room messages."""
-    return render_template("chat.html", channel_name=channelname)
+    return render_template("index.html")
 
 
 @socketio.on('connect')
-@authenticated_only
-def connect_handler():
-    """Connect a user to socket."""
-    emit("channels", {"channels": list(live_channels)})
+def handle_connect():
+    """Set up user log in."""
+
+    # TODO Log in user
+    username = request.args['username']
+    # Don't allow user to submit empty forms
+    if username is None:
+
+        send("Username taken")
+        disconnect()
+    elif username not in users_db:
+        users_db.add(username)
+        emit("channels", {"channels": list(live_channels)})
 
 
 @socketio.on('create channel')
-@authenticated_only
-def channel(data):
+def handle_channel(data):
     """User attempts to create a channel."""
 
     channel = data['channel']
