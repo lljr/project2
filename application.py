@@ -1,11 +1,9 @@
 import os
 
-from flask import Flask, render_template, redirect, request, session, \
-    jsonify, url_for
+from flask import Flask, render_template, request
 
-from flask_socketio import SocketIO, emit, join_room, leave_room, send
-
-from helpers import login_required, authenticated_only
+from flask_socketio import SocketIO, emit, join_room, leave_room, send,\
+    disconnect
 
 # from json import dumps
 
