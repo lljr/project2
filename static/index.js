@@ -1,24 +1,76 @@
 document.addEventListener('DOMContentLoaded', () => {
 
-  // Connect to websocket
-  var socket = io.connect(location.protocol + '//' + document.domain + ':' + location.port);
+  // TODO On user-form submit do the Login and save username on input to localStorage
+  document.querySelector('#user-form').onsubmit = () => {
+
+    // Initialize new request
+    const request = new XMLHttpRequest();
+    const username = document.querySelector('#username').value;
+    request.open('POST', '/adduser');
+
+    // Callback function for when request completes
+    request.onload = () => {
+
+      // Extract JSON data from request
+      const data = JSON.parse(request.responseText);
+
+      // Update the result div
+      if (data.success) {
+
+        // const redirect = new XHLHttpRequest();
+        // redirect.onload = () => {
+        //   localStorage.setItem("username", data.username);
+
+        // }
+        // redirect.send();
+
+        const contents = `${data.success}`
+        document.querySelector('#result').innerHTML = contents;
+      }
+      else {
+        document.querySelector('#result').innerHTML = 'There was an error.';
+      }
+    }
+
+    // Add data to send with request
+    const data = new FormData();
+    data.append('username', username);
+
+    // Send request
+    request.send(data);
+    return false;
+  };
+
+  const socket = io.connect(location.protocol + '//' + document.domain + ':' + location.port);
+  // Ask user to identiy yourself
+  if(!localStorage.getItem("username")) {
+    const mainRow = document.querySelector("#main-row");
+    setUsernameForm(mainRow, socket);
+  }
 
   // When connected, configure buttons
-  socket.on('connect', () => {
+  socket.on('connect', (username, channels, message) => {
+
+    console.log(username);
+    console.log(channels);
+    console.log(message);
+
+    // TODO Check again that username localStorage value is not empty (account for reconnection)
+    // TODO Remove Login Form again and show Channel creation input
 
     const ul = document.querySelector("#livechannels > ul");
     if(!localStorage.getArray("channels")) {
-      console.log("i connected");
+      console.log("first login after connection");
       localStorage.setItem("channels", "[]");
+      channels.forEach(channel => updateChannelsList(channel, ul, updateStorage="yes"));
+      console.log("storage updated if there are channels");
     }
     // Persist channels list after page refresh
     else if (localStorage.getArray("channels").length) {
       clearOutListData(ul);
       console.log("i refreshed")
-      const channelsArray = localStorage.getArray("channels");
-      channelsArray.forEach(channel => updateChannelsList(channel, ul));
-      // https://davidwalsh.name/event-delegate
-      // Ul.addEventListener("click", event => enterChat(channel, event.ChannelElement));
+      const localChannels = localStorage.getArray("channels");
+      localChannels.forEach(channel => updateChannelsList(channel, ul));
     }
 
     document.querySelector("#channelform").onsubmit = () => {
