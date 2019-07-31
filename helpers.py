@@ -1,13 +1,22 @@
-import functools
-from flask import session
+from functools import wraps
+from flask import session, url_for, redirect
 from flask_socketio import disconnect
 
 
 def authenticated_only(f):
-    @functools.wraps(f)
+    @wraps(f)
     def wrapped(*args, **kwargs):
-        if not session.username:
+        if session.get("username") is None:
             disconnect()
         else:
             return f(*args, **kwargs)
     return wrapped
+
+
+def login_required(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if session.get("username") is None:
+            return redirect(url_for('adduser'))
+        return f(*args, **kwargs)
+    return decorated_function
