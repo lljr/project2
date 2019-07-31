@@ -40,6 +40,7 @@ def adduser():
 def leave():
     """Leave chat."""
     session.clear()
+    disconnect()
     return redirect(url_for('index'))
 
 
