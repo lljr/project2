@@ -1,36 +1,36 @@
 {% extends "layout.html"%}
-{% block title %}Home{% endblock %}
+{% block title %}Chat{% endblock %}
 {% block main %}
 
-  {% if username %}
-    <h2 class="pb-2">Hello, {{username}}</h2>
-  {% endif %}
-  <div class="row">
-    <div class="col">
-      <h3>Channels</h3>
-      <div id="livechannels" style="width: 18rem;">
-        <ul class="list-group list-group-flush">
-          <!-- Updated Online Channels -->
-        </ul>
-      </div>
+  <h2 class="pb-2"></h2>
 
-    </div>
+  <div id="main-row" class="row">
 
-    <div class="col">
+              <!-- Updated Online Channels -->
+    <!-- <div class="col">
+         <h3>Channels</h3>
+         <div id="livechannels" style="width: 18rem;">
+         <ul class="list-group list-group-flush">
 
-      <form id="channelform">
-        <div class="row">
-          <div class="col">
-            <input id="channelname" class="form-control" placeholder="Channel name" type="text">
-          </div>
-          <div class="col">
-            <button type="submit" class="btn btn-dark">Create</button>
-          </div>
-        </div>
-      </form>
-      <small id="message" class="form-text text-muted"></small>
+         </ul>
+         </div>
+         </div>
 
-    </div>
+         <div class="col">
+
+         <form id="channelform">
+         <div class="row">
+         <div class="col">
+         <input id="channelname" class="form-control" placeholder="Channel name" type="text">
+         </div>
+         <div class="col">
+         <button type="submit" class="btn btn-dark">Create</button>
+         </div>
+         </div>
+         </form>
+         <small id="message" class="form-text text-muted"></small>
+
+         </div> -->
   </div>
 
 {% endblock %}
