@@ -14,25 +14,39 @@ live_channels = set()
 
 
 @app.route("/")
+@login_required
 def index():
     """Renders main page."""
     return render_template("index.html")
 
 
+@app.route("/adduser", methods=["GET", "POST"])
+def adduser():
+    """Log user in."""
+    if request.method == "GET":
+        return render_template("adduser.html")
+    else:
+        # Don't allow user to submit empty forms
+        username = request.form.get("username")
+        if not username:
+            return jsonify({})
+        elif username not in users_db:
+            users_db.add(username)
+
+
+@app.route("/leave")
+def leave():
+    """Leave chat."""
+    session.clear()
+    return redirect(url_for('index'))
+
+
 @socketio.on('connect')
+@authenticated_only
 def handle_connect():
     """Set up user log in."""
-
-    # TODO Log in user
-    username = request.args['username']
-    # Don't allow user to submit empty forms
-    if username is None:
-
-        send("Username taken")
-        disconnect()
-    elif username not in users_db:
-        users_db.add(username)
-        emit("channels", {"channels": list(live_channels)})
+    #  Return a value that gets handled in client callback indicating connection
+    return session['username'], list(live_channels), "you're ready to chat!"
 
 
 @socketio.on('create channel')
