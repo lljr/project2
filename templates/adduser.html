@@ -2,8 +2,16 @@
 {% block title %}Add User{% endblock %}
 {% block main %}
 
-  <!-- TODO center these two texts -->
-  <h2 class="pb-2">Choose a display name</h2>
+  <form id="user-form">
+    <div class="row">
+      <div class="col">
+        <input id="username" required class="form-control" type="text" placeholder="Enter a username" />
+      </div>
 
+      <div class="col">
+        <button class="btn btn-dark">Start</button>
+      </div>
+    </div>
+  </form>
 
 {% endblock %}
