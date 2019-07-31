@@ -86,8 +86,15 @@ document.addEventListener('DOMContentLoaded', () => {
       return false;
     }
 
+    // https://davidwalsh.name/event-delegate
+    ul.addEventListener("click", e => joinRoom(e));
   });
 
+  socket.on('disconnect', () => {
+    console.log('conn done!');
+    localStorage.clear();
+
+  });
 
   socket.on('channel created?', data => {
     document.querySelector('#message').innerHTML = `${data.message}`;
@@ -98,6 +105,11 @@ document.addEventListener('DOMContentLoaded', () => {
       updateChannelsList(data.channel,
                          document.querySelector("#livechannels > ul"),
                          updateStorage="yes");
+  });
+
+  socket.on("message", data => {
+    // TODO grab message for when user authenticates but sends empty form
+
   });
 
   socket.on("channels", data => {
