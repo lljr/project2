@@ -1,26 +1,11 @@
 document.addEventListener('DOMContentLoaded', () => {
-
-  // TODO On user-form submit do the Login and save username on input to localStorage
-  document.querySelector('#user-form').addEventListener("submit", );
-
-
-
-
   const socket = io.connect(location.protocol + '//' + document.domain + ':' + location.port);
-  // Ask user to identiy yourself
-  // if(!localStorage.getItem("username")) {
-  //   const mainRow = document.querySelector("#main-row");
-  //   setUsernameForm(mainRow, socket);
-  // }
 
   // When connected, configure buttons
-  socket.on('connect', (username, channels, message) => {
+  socket.on('connect', () => {
 
     console.log("connected!")
-    console.log(username);
-    console.log(channels);
-    console.log(message);
-    // TODO Check again that username localStorage value is not empty (account for reconnection)
+      // TODO Check again that username localStorage value is not empty (account for reconnection)
     // TODO Remove Login Form again and show Channel creation input
 
     const ul = document.querySelector("#livechannels > ul");
@@ -58,7 +43,6 @@ document.addEventListener('DOMContentLoaded', () => {
   socket.on('disconnect', () => {
     console.log('conn done!');
     localStorage.clear();
-
   });
 
   socket.on('channel created?', data => {
