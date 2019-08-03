@@ -1,60 +1,25 @@
 document.addEventListener('DOMContentLoaded', () => {
 
   // TODO On user-form submit do the Login and save username on input to localStorage
-  document.querySelector('#user-form').onsubmit = () => {
+  document.querySelector('#user-form').addEventListener("submit", );
 
-    // Initialize new request
-    const request = new XMLHttpRequest();
-    const username = document.querySelector('#username').value;
-    request.open('POST', '/adduser');
 
-    // Callback function for when request completes
-    request.onload = () => {
 
-      // Extract JSON data from request
-      const data = JSON.parse(request.responseText);
-
-      // Update the result div
-      if (data.success) {
-
-        // const redirect = new XHLHttpRequest();
-        // redirect.onload = () => {
-        //   localStorage.setItem("username", data.username);
-
-        // }
-        // redirect.send();
-
-        const contents = `${data.success}`
-        document.querySelector('#result').innerHTML = contents;
-      }
-      else {
-        document.querySelector('#result').innerHTML = 'There was an error.';
-      }
-    }
-
-    // Add data to send with request
-    const data = new FormData();
-    data.append('username', username);
-
-    // Send request
-    request.send(data);
-    return false;
-  };
 
   const socket = io.connect(location.protocol + '//' + document.domain + ':' + location.port);
   // Ask user to identiy yourself
-  if(!localStorage.getItem("username")) {
-    const mainRow = document.querySelector("#main-row");
-    setUsernameForm(mainRow, socket);
-  }
+  // if(!localStorage.getItem("username")) {
+  //   const mainRow = document.querySelector("#main-row");
+  //   setUsernameForm(mainRow, socket);
+  // }
 
   // When connected, configure buttons
   socket.on('connect', (username, channels, message) => {
 
+    console.log("connected!")
     console.log(username);
     console.log(channels);
     console.log(message);
-
     // TODO Check again that username localStorage value is not empty (account for reconnection)
     // TODO Remove Login Form again and show Channel creation input
 
