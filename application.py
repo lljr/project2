@@ -25,22 +25,25 @@ def index():
 @app.route("/adduser", methods=["GET", "POST"])
 def adduser():
     """Log user in."""
-    if request.method == "GET":
-        return render_template("adduser.html")
-    else:
+    if request.method == "POST":
         # Don't allow user to submit empty forms
         username = request.form.get("username")
+        print(f"the username is {username}")
         if not username:
             return jsonify({})
         elif username not in users_db:
+            session["username"] = username
             users_db.add(username)
+            return redirect(url_for("index"))
+    else:
+        return render_template("adduser.html")
 
 
 @app.route("/leave")
-def leave():
+def logout():
     """Leave chat."""
+    users_db.pop(session.get("username"))
     session.clear()
-    disconnect()
     return redirect(url_for('index'))
 
 
