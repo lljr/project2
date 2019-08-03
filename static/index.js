@@ -58,80 +58,47 @@ document.addEventListener('DOMContentLoaded', () => {
 
   socket.on("message", data => {
     // TODO grab message for when user authenticates but sends empty form
-    console.log("message sent" + data);
+//    console.log("message sent" + JSON.stringify(data));
 
   });
 
-  socket.on("channels", data => {
+  socket.on("json", data => {
+    JSON.parse(data);
+    switch(data.type) {
+    case "sync":
+      const channels = data.channels;
+      // There are channels in server and storage is empty
+      if (data.channels.length && !localStorage.getArray("channels").length) {
+        console.log('fetching channels...')
+        const ul = document.querySelector("#livechannels > ul");
+        clearOutListData(ul)
+        channels.forEach(channel => updateChannelsList(channel,
+                                                      ul,
+                                                      updateStorage="yes"));
+      }
+      break;
 
-    //Sync server and client on first login
-    const channels = data.channels;
-
-    // There are channels in server and storage is empty (first login or user deleted it?)
-    if (data.channels.length && !localStorage.getArray("channels").length) {
-      console.log('fetching channels...')
-      const ul = document.querySelector("#livechannels > ul");
-      clearOutListData(ul)
-      channels.forEach(channel => updateChannelsList(channel,
-                                                    ul,
-                                                    updateStorage="yes"));
     }
+
   });
+
 
 });
 
-function authUser = (event) => {
+// function setUsernameForm(mainRow, socket) {
+//   // TODO needs work....
+//   const form = document.querySelector("#user-form");
 
-  const request = new XMLHttpRequest();
-  request.open('POST', '/adduser');
-  // Callback function for when request completes
-  request.onload = () => {
+//   form.onsubmit = () => {
 
-    // Extract JSON data from request
-    // const data = JSON.parse(request.responseText);
-
-    console.log('logged in');
-
-    // Update the result div
-    if (data.success) {
-
-      // const redirect = new XHLHttpRequest();
-      // redirect.onload = () => {
-      //   localStorage.setItem("username", data.username);
-
-      // }
-      // redirect.send();
-
-      const contents = `${data.success}`
-      document.querySelector('#result').innerHTML = contents;
-    }
-    else {
-      document.querySelector('#result').innerHTML = 'There was an error.';
-    }
-  }
-
-  // Add data to send with request
-  const data = new FormData();
-  data.append('username', username);
-
-  // Send request
-  request.send(data);
-}
-
-function setUsernameForm(mainRow, socket) {
-  // TODO needs work....
-  const form = document.querySelector("#user-form");
-
-  form.onsubmit = () => {
-
-    const username = input.value;
+//     const username = input.value;
 
 
-    input.value = '';
+//     input.value = '';
 
-    return false;
-  };
-}
+//     return false;
+//   };
+// }
 
 // TODO When logging out, clear localStorage
 function updateChannelsList(channelName, ul, updateStorage="no") {
