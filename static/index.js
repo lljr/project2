@@ -74,6 +74,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   socket.on("message", data => {
     // TODO grab message for when user authenticates but sends empty form
+    console.log("message sent" + data);
 
   });
 
