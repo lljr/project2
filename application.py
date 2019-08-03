@@ -48,8 +48,10 @@ def leave():
 @authenticated_only
 def handle_connect():
     """Set up user log in."""
-    #  Return a value that gets handled in client callback indicating connection
-    return session['username'], list(live_channels), "you're ready to chat!"
+    send({"type": "sync",
+          "channels": list(live_channels),
+          "username": session.get("username")
+    }, json=True)
 
 
 @socketio.on('create channel')
