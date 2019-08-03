@@ -82,23 +82,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   });
 
-
 });
-
-// function setUsernameForm(mainRow, socket) {
-//   // TODO needs work....
-//   const form = document.querySelector("#user-form");
-
-//   form.onsubmit = () => {
-
-//     const username = input.value;
-
-
-//     input.value = '';
-
-//     return false;
-//   };
-// }
 
 // TODO When logging out, clear localStorage
 function updateChannelsList(channelName, ul, updateStorage="no") {
