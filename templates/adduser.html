@@ -2,10 +2,10 @@
 {% block title %}Add User{% endblock %}
 {% block main %}
 
-  <form id="user-form">
+  <form id="user-form" method="POST" action="/adduser">
     <div class="row">
       <div class="col">
-        <input id="username" required class="form-control" type="text" placeholder="Enter a username" />
+        <input id="username" required name="username" class="form-control" type="text" placeholder="Enter a username" />
       </div>
 
       <div class="col">
