@@ -95,6 +95,44 @@ document.addEventListener('DOMContentLoaded', () => {
 
 });
 
+function authUser = (event) => {
+
+  const request = new XMLHttpRequest();
+  request.open('POST', '/adduser');
+  // Callback function for when request completes
+  request.onload = () => {
+
+    // Extract JSON data from request
+    // const data = JSON.parse(request.responseText);
+
+    console.log('logged in');
+
+    // Update the result div
+    if (data.success) {
+
+      // const redirect = new XHLHttpRequest();
+      // redirect.onload = () => {
+      //   localStorage.setItem("username", data.username);
+
+      // }
+      // redirect.send();
+
+      const contents = `${data.success}`
+      document.querySelector('#result').innerHTML = contents;
+    }
+    else {
+      document.querySelector('#result').innerHTML = 'There was an error.';
+    }
+  }
+
+  // Add data to send with request
+  const data = new FormData();
+  data.append('username', username);
+
+  // Send request
+  request.send(data);
+}
+
 function setUsernameForm(mainRow, socket) {
   // TODO needs work....
   const form = document.querySelector("#user-form");
