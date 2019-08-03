@@ -58,11 +58,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
   socket.on("message", data => {
     // TODO grab message for when user authenticates but sends empty form
-//    console.log("message sent" + JSON.stringify(data));
-
+    // console.log("message sent" + JSON.stringify(data));
   });
 
   socket.on("json", data => {
+
     JSON.parse(data);
     switch(data.type) {
     case "sync":
