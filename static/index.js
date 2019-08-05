@@ -136,21 +136,7 @@ function setUpChannelListElement(li, button, channelName) {
   li.append(channelName, button);
 }
 
-function joinRoom(event) {
-  const clickedEl = event.target;
-  if (clickedEl.nodeName === "LI") {
-    // TODO check the user joined the channel
-    // TODO switchChatView()
-  } else if (clickedEl.nodeName === "BUTTON") {
-    const li = clickedEl.parentNode;
-    // TODO switchChatView()
 
-    socket.emit('join', {
-      "room": li.dataset.channel
-    });
-
-  }
-}
 // ======= Storage helper functions start here =======
 // https://stackoverflow.com/a/23516713
 Storage.prototype.getArray = function(arrayName) {
