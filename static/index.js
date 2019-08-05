@@ -4,38 +4,18 @@ document.addEventListener('DOMContentLoaded', () => {
   // When connected, configure buttons
   socket.on('connect', () => {
 
-    console.log("connected!")
-      // TODO Check again that username localStorage value is not empty (account for reconnection)
-    // TODO Remove Login Form again and show Channel creation input
-
-    const ul = document.querySelector("#livechannels > ul");
-    if(!localStorage.getArray("channels")) {
-      console.log("first login after connection");
-      localStorage.setItem("channels", "[]");
-      channels.forEach(channel => updateChannelsList(channel, ul, updateStorage="yes"));
-      console.log("storage updated if there are channels");
-    }
-    // Persist channels list after page refresh
-    else if (localStorage.getArray("channels").length) {
-      clearOutListData(ul);
-      console.log("i refreshed")
-      const localChannels = localStorage.getArray("channels");
-      localChannels.forEach(channel => updateChannelsList(channel, ul));
-    }
-
     document.querySelector("#channelform").onsubmit = () => {
       const channelNameInput = document.querySelector("#channelname");
-
       socket.emit('create channel', {
         'channel': channelNameInput.value
       })
 
       // Clear out input field
       channelNameInput.value = '';
-
       return false;
     }
 
+    const ul = document.querySelector("#livechannels > ul");
     // https://davidwalsh.name/event-delegate
     ul.addEventListener("click", e => joinRoom(e));
   });
@@ -57,34 +37,65 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   socket.on("message", data => {
-    // TODO grab message for when user authenticates but sends empty form
-    // console.log("message sent" + JSON.stringify(data));
+    console.log(data);
+
   });
 
   socket.on("json", data => {
 
-    JSON.parse(data);
     switch(data.type) {
     case "sync":
-      const channels = data.channels;
-      // There are channels in server and storage is empty
-      if (data.channels.length && !localStorage.getArray("channels").length) {
-        console.log('fetching channels...')
-        const ul = document.querySelector("#livechannels > ul");
-        clearOutListData(ul)
-        channels.forEach(channel => updateChannelsList(channel,
-                                                      ul,
-                                                      updateStorage="yes"));
-      }
+      syncWithServer(document.querySelector("#livechannels > ul"),
+                     data.channels,
+                     data.username);
       break;
-
     }
 
   });
 
+  function joinRoom(event) {
+    const clickedEl = event.target;
+    if (clickedEl.nodeName === "LI") {
+      console.log("i clicked list!")
+      // TODO check the user joined the channel
+      // TODO switchChatView()
+      // This is local
+    } else if (clickedEl.nodeName === "BUTTON") {
+      const li = clickedEl.parentNode;
+      // TODO switchChatView()
+      // This requires server manipulation
+      console.log("i clicked join!");
+
+      let name = localStorage.getItem("username");
+      socket.emit('join', {
+        username: name,
+        room: li.dataset.channel
+      });
+
+    }
+}
+
 });
 
-// TODO When logging out, clear localStorage
+function syncWithServer(ul, channels, username) {
+
+  // On login
+  if (!localStorage.getItem("username")) {
+    localStorage.setItem("username", username);
+    localStorage.setItem("channels", "[]");
+    channels.forEach(channel => updateChannelsList(channel, ul, updateStorage="yes"));
+  }
+
+  // For some reason, maybe it was a page refresh, if so then
+  // Persist channels list afterwards but from localStorage
+  if (localStorage.getArray("channels").length) {
+    clearOutListData(ul);
+    const localChannels = localStorage.getArray("channels");
+    localChannels.forEach(channel => updateChannelsList(channel, ul));
+  }
+
+}
+
 function updateChannelsList(channelName, ul, updateStorage="no") {
 
   // TODO The Join button only needs to be created once?
