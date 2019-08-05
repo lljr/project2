@@ -42,7 +42,7 @@ def adduser():
 @app.route("/leave")
 def logout():
     """Leave chat."""
-    users_db.pop(session.get("username"))
+    # users_db.remove(session.get("username"))
     session.clear()
     return redirect(url_for('index'))
 
