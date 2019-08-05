@@ -88,7 +88,10 @@ def handle_channel(data):
 
 @socketio.on('join')
 def on_join(data):
+    """User joins room."""
+    print(data)
     username = data['username']
+    print(f"{username}")
     room = data['room']
     join_room(room)
     send(username + ' has entered the room.', room=room)
