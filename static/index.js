@@ -46,6 +46,56 @@ document.addEventListener('DOMContentLoaded', () => {
                      data.channels,
                      data.username);
       break;
+    case "join":
+      // Show room
+      // TODO set up the room
+      // window.location.assign("/chat");
+      // TODO If room has not already been joined do something...
+      const convoContainer = document.querySelector("#chat-convos");
+
+      const chatRoom = document.createElement("div");
+      chatRoom.setAttribute("class", "col");
+      // For now it is a board... perhaps in the future the chat rooms will have tabbed views
+      chatRoom.setAttribute("id", `${data.room}-board`);
+
+      convoContainer.appendChild(chatRoom);
+
+      localStorage.pushArrayItem("joined", data.room);
+      const title = document.createElement("h4");
+      title.textContent = data.room;
+      const parentList = document.createElement("ul");
+      parentList.setAttribute("id", "msgs");
+
+      parentList.appendChild(title);
+
+      const sendMsgs = document.createElement("form");
+      const msgInput = document.createElement("input");
+      msgInput.setAttribute("id", "msg");
+
+      const sendMsgButton = document.createElement("button");
+      sendMsgButton.textContent = "Send";
+
+      sendMsgs.appendChild(msgInput);
+      sendMsgs.appendChild(sendMsgButton);
+
+      chatRoom.appendChild(parentList);
+      chatRoom.appendChild(sendMsgs);
+      const message = document.createElement("li");
+      message.textContent = data.message;
+      parentList.appendChild(message);
+
+      sendMsgs.addEventListener("submit", (e) => {
+        const input = document.querySelector("#msg");
+        const msg = document.createElement("li");
+        const msgsList = document.querySelector(`#${data.room}-board`);
+
+        msg.textContent = input.value;
+        msgsList.appendChild(msg);
+        input.value = '';
+
+        e.preventDefault();
+      });
+      break;
     }
 
   });
