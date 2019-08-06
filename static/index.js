@@ -20,14 +20,10 @@ document.addEventListener('DOMContentLoaded', () => {
     ul.addEventListener("click", e => joinRoom(e));
   });
 
-  socket.on('disconnect', () => {
-    console.log('conn done!');
-    localStorage.clear();
-  });
+  socket.on('disconnect', () => localStorage.clear());
 
   socket.on('channel created?', data => {
     document.querySelector('#message').innerHTML = `${data.message}`;
-
     // Assume data.channel comes empty when channel already exists
     // if not then update the channels list by appending the last channel
     if (data.channel)
