@@ -119,6 +119,8 @@ document.addEventListener('DOMContentLoaded', () => {
         room: li.dataset.channel
       });
 
+
+
     }
 }
 
