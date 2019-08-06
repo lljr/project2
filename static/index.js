@@ -35,6 +35,7 @@ document.addEventListener('DOMContentLoaded', () => {
   socket.on("message", data => {
     console.log(data);
 
+
   });
 
   socket.on("json", data => {
