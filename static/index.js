@@ -80,6 +80,7 @@ function syncWithServer(ul, channels, username) {
   if (!localStorage.getItem("username")) {
     localStorage.setItem("username", username);
     localStorage.setItem("channels", "[]");
+    localStorage.setItem("joined", "[]");
     channels.forEach(channel => updateChannelsList(channel, ul, updateStorage="yes"));
   }
 
