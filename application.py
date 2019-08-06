@@ -100,7 +100,7 @@ def on_join(data):
 @socketio.on('message')
 def handle_message(data):
     """Send messages to rooms."""
-    pass
+    send(data["reply"], room=data["room"])
 
 
 @socketio.on('leave')
