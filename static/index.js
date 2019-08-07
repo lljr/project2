@@ -146,13 +146,23 @@ document.addEventListener('DOMContentLoaded', () => {
       const li = clickedEl.parentNode;
       // TODO switchChatView()
       // This requires server manipulation
-      console.log("i clicked join!");
+      if(clickedEl.textContent === "Join") {
+        let name = localStorage.getItem("username");
 
-      let name = localStorage.getItem("username");
-      socket.emit('join', {
-        username: name,
-        room: li.dataset.channel
-      });
+        socket.emit('join', {
+          username: name,
+          room: li.dataset.channel
+        }, ok => {
+          // TODO Handle refresh so that msgs persists and chat room doesnt get added again to DOM
+          if (ok === "ok") {
+            clickedEl.textContent = "Leave";
+            clickedEl.classList.remove("btn-primary");
+            clickedEl.classList.add("btn-warning");
+
+            setUpChatRoom(li.dataset.channel);
+          }
+        });
+      }
 
 
 
