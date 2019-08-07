@@ -101,12 +101,19 @@ def on_join(data):
           "type": "join",
           "room": room
     }, room=room, json=True)
+    return "ok"
 
 
 @socketio.on('message')
 def handle_message(data):
     """Send messages to rooms."""
-    send(data["reply"], room=data["room"])
+
+    send({
+        "type": "message",
+        "room": data['room'],
+        "message": data["message"]
+    }, room=data["room"], json=True)
+    return "ok"
 
 
 @socketio.on('leave')
