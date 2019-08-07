@@ -1,9 +1,10 @@
+import collections
 import os
 
-from flask import Flask, render_template, request, session, jsonify, redirect, url_for
+from flask import Flask, render_template, request, session, jsonify, redirect,\
+    url_for
 
-from flask_socketio import SocketIO, emit, join_room, leave_room, send,\
-    disconnect
+from flask_socketio import SocketIO, emit, join_room, leave_room, send
 
 from helpers import login_required, authenticated_only
 
