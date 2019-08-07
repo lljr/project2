@@ -28,8 +28,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // if not then update the channels list by appending the last channel
     if (data.channel)
       updateChannelsList(data.channel,
-                         document.querySelector("#livechannels > ul"),
-                         updateStorage="yes");
+                         document.querySelector("#livechannels > ul"));
   });
 
   socket.on("message", data => {
@@ -52,7 +51,12 @@ document.addEventListener('DOMContentLoaded', () => {
                      data.username);
       break;
     case "message":
-      console.log(data);
+      const roomMsgList = document.querySelector(`#${data.room}-msglist`);
+      const localLi = document.createElement("li");
+      localLi.textContent = data.message;
+
+      roomMsgList.appendChild(localLi);
+
       break;
 
     }
@@ -105,6 +109,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const msg = document.createElement("li");
 
+    // TODO Maybe it is not a good idea to append here
+    // bc messages get duplicated in "json" event handler
     msg.textContent = input.value;
     msgList.appendChild(msg);
 
@@ -152,14 +158,33 @@ document.addEventListener('DOMContentLoaded', () => {
         socket.emit('join', {
           username: name,
           room: li.dataset.channel
-        }, ok => {
+        }, (ok, messages) => {
           // TODO Handle refresh so that msgs persists and chat room doesnt get added again to DOM
           if (ok === "ok") {
+
+
+
             clickedEl.textContent = "Leave";
             clickedEl.classList.remove("btn-primary");
             clickedEl.classList.add("btn-warning");
 
             setUpChatRoom(li.dataset.channel);
+            // NOTE This works
+            console.log("received these previous msgs: ");
+
+            const roomMsgList = document.querySelector(`#${li.dataset.channel}-msglist`);
+            console.log(messages);
+
+            messages.forEach(message => {
+              console.log(message.content);
+
+              const li = document.createElement("li");
+              li.textContent = message.content;
+
+              roomMsgList.appendChild(li);
+
+            });
+
           }
         });
       }
@@ -177,28 +202,16 @@ function syncWithServer(ul, channels, username) {
   if (!localStorage.getItem("username")) {
     localStorage.setItem("username", username);
     localStorage.setItem("channels", "[]");
-    localStorage.setItem("joined", "[]");
-    channels.forEach(channel => updateChannelsList(channel, ul, updateStorage="yes"));
-  }
-
-  // For some reason, maybe it was a page refresh, if so then
-  // Persist channels list afterwards but from localStorage
-  if (localStorage.getArray("channels").length) {
     clearOutListData(ul);
-    const localChannels = localStorage.getArray("channels");
-    localChannels.forEach(channel => updateChannelsList(channel, ul));
+    channels.forEach(channel => updateChannelsList(channel, ul));
   }
-
 }
 
-function updateChannelsList(channelName, ul, updateStorage="no") {
+function updateChannelsList(channelName, ul) {
 
   // TODO The Join button only needs to be created once?
   const joinButton = document.createElement("button");
   setUpJoinChannelButton(joinButton)
-
-  if (updateStorage === "yes")
-    localStorage.pushArrayItem('channels', channelName);
 
   const li = document.createElement("li");
   setUpChannelListElement(li, joinButton, channelName);

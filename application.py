@@ -31,12 +31,11 @@ def adduser():
     if request.method == "POST":
         # Don't allow user to submit empty forms
         username = request.form.get("username")
-        print(f"the username is {username}")
         if not username:
             return jsonify({})
-        elif username not in users_db:
+        elif username not in db.get("users"):
             session["username"] = username
-            users_db.add(username)
+            db["users"].add(username)
             return redirect(url_for("index"))
     else:
         return render_template("adduser.html")
@@ -50,6 +49,7 @@ def adduser():
 @app.route("/leave")
 def logout():
     """Leave chat."""
+
     # users_db.remove(session.get("username"))
     session.clear()
     return redirect(url_for('index'))
@@ -59,9 +59,10 @@ def logout():
 @authenticated_only
 def handle_connect():
     """Set up user log in."""
-    send({"type": "sync",
-          "channels": list(live_channels),
-          "username": session.get("username")
+    send({
+        "type": "sync",
+        "channels": list(db.get("channels")),
+        "username": session.get("username")
     }, json=True)
 
 
@@ -78,15 +79,19 @@ def handle_channel(data):
             'message': "You sent an empty form",
             'channel': ""
         })
-
     # Check channel has not already been created
-    elif channel in live_channels:
+    elif channel in db.get("channels"):
         emit('channel created?', {
             "message": "Channel already exists.",
             'channel': ""
         })
     else:
-        live_channels.add(channel)
+        db["channels"].update({
+            channel: {
+                "messages": collections.deque(maxlen=100)
+            }
+        })
+
         emit('channel created?', {
             "message": "Channel created.",
             'channel': channel
@@ -100,16 +105,26 @@ def on_join(data):
     username = data['username']
     room = data['room']
     join_room(room)
-    send({"message": "{0} has entered the room.".format(username),
-          "type": "join",
-          "room": room
+    send({
+        "message": "{0} has entered the room.".format(username),
+        "type": "join",
+        "room": room
     }, room=room, json=True)
-    return "ok"
+
+    current_messages = list(db["channels"][room]["messages"])
+    print(current_messages)
+    return "ok", list(current_messages)
 
 
 @socketio.on('message')
 def handle_message(data):
     """Send messages to rooms."""
+
+    room = db["channels"].get(data["room"])
+    room["messages"].append({
+        "sender": data["username"],
+        "content": data["message"]
+    })
 
     send({
         "type": "message",
