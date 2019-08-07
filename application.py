@@ -69,7 +69,7 @@ def handle_channel(data):
     channel = data['channel']
     # Notify user when sending empty form data
     # Note to self: when sending data with JS `FromData' object, the key gets
-    # assigned an empty string as its value when submitting empty form
+    # assigned an empty string as its value when submitting an empty form
     if not channel:
         emit('channel created?', {
             'message': "You sent an empty form",
