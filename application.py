@@ -11,8 +11,10 @@ app = Flask(__name__)
 app.config["SECRET_KEY"] = os.getenv("SECRET_KEY")
 socketio = SocketIO(app)
 
-users_db = set()
-live_channels = set()
+db = {
+    "users": set(),
+    "channels": dict()
+}
 
 
 @app.route("/")
