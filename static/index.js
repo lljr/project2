@@ -34,11 +34,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
   socket.on("message", data => {
     console.log(data);
-
+    // TODO move this to message handler function
+    // const message = document.createElement("li");
+    // message.textContent = message;
+    // parentList.appendChild(message);
 
   });
 
   socket.on("json", data => {
+
+    console.log(data);
 
     switch(data.type) {
     case "sync":
@@ -46,59 +51,89 @@ document.addEventListener('DOMContentLoaded', () => {
                      data.channels,
                      data.username);
       break;
-    case "join":
-      // Show room
-      // TODO set up the room
-      // window.location.assign("/chat");
-      // TODO If room has not already been joined do something...
-      const convoContainer = document.querySelector("#chat-convos");
-
-      const chatRoom = document.createElement("div");
-      chatRoom.setAttribute("class", "col");
-      // For now it is a board... perhaps in the future the chat rooms will have tabbed views
-      chatRoom.setAttribute("id", `${data.room}-board`);
-
-      convoContainer.appendChild(chatRoom);
-
-      localStorage.pushArrayItem("joined", data.room);
-      const title = document.createElement("h4");
-      title.textContent = data.room;
-      const parentList = document.createElement("ul");
-      parentList.setAttribute("id", "msgs");
-
-      parentList.appendChild(title);
-
-      const sendMsgs = document.createElement("form");
-      const msgInput = document.createElement("input");
-      msgInput.setAttribute("id", "msg");
-
-      const sendMsgButton = document.createElement("button");
-      sendMsgButton.textContent = "Send";
-
-      sendMsgs.appendChild(msgInput);
-      sendMsgs.appendChild(sendMsgButton);
-
-      chatRoom.appendChild(parentList);
-      chatRoom.appendChild(sendMsgs);
-      const message = document.createElement("li");
-      message.textContent = data.message;
-      parentList.appendChild(message);
-
-      sendMsgs.addEventListener("submit", (e) => {
-        const input = document.querySelector("#msg");
-        const msg = document.createElement("li");
-        const msgsList = document.querySelector(`#${data.room}-board`);
-
-        msg.textContent = input.value;
-        msgsList.appendChild(msg);
-        input.value = '';
-
-        e.preventDefault();
-      });
+    case "message":
+      console.log(data);
       break;
+
     }
 
   });
+
+  function setUpChatRoom(room) {
+    // Show room
+
+    // TODO Clean up function signature
+    const convoContainer = document.querySelector("#chat-convos");
+
+    const chatRoom = document.createElement("div");
+    chatRoom.setAttribute("class", "col");
+    // For now it is a board... perhaps in the future the chat rooms will have tabbed views
+    chatRoom.setAttribute("id", `${room}-board`);
+
+    convoContainer.appendChild(chatRoom);
+
+    // TODO handle pushing to joined rooms local storage array outside of this function
+    const title = document.createElement("h4");
+    title.textContent = room;
+    const parentList = document.createElement("ul");
+    parentList.setAttribute("id", `${room}-msglist`);
+    parentList.setAttribute("data-room", room);
+
+    parentList.appendChild(title);
+
+    const sendMsgs = document.createElement("form");
+    const msgInput = document.createElement("input");
+    msgInput.setAttribute("id", `${room}-msg`);
+
+    const sendMsgButton = document.createElement("button");
+    sendMsgButton.textContent = "Send";
+
+    sendMsgs.appendChild(msgInput);
+    sendMsgs.appendChild(sendMsgButton);
+
+    chatRoom.appendChild(parentList);
+    chatRoom.appendChild(sendMsgs);
+
+    // TODO Refactor so that messages get sent to server
+    sendMsgs.addEventListener("submit", event => handleMsgSending(event) );
+  }
+
+  function handleMsgSending(e) {
+    const msgList = e.currentTarget.parentNode.querySelector("ul");
+
+    const input = e.currentTarget.querySelector("input");
+
+    const msg = document.createElement("li");
+
+    msg.textContent = input.value;
+    msgList.appendChild(msg);
+
+    socket.send({
+      "room": msgList.dataset.room,
+      "username": localStorage.getItem("username"),
+      "message": input.value
+    }, (ok)=> {
+      console.log("ok");
+    })
+
+    e.currentTarget.reset();
+    e.preventDefault();
+  }
+
+  // TODO Add this when message reply is implemented
+  // function insertMsgToChatRoom(e) {
+  //   const msgList = e.currentTarget.parentNode.querySelector("ul");
+
+  //   const input = e.currentTarget.querySelector("input");
+
+  //   const msg = document.createElement("li");
+
+  //   msg.textContent = input.value;
+  //   msgList.appendChild(msg);
+
+  //   e.currentTarget.reset();
+  //   e.preventDefault();
+  // }
 
   function joinRoom(event) {
     const clickedEl = event.target;
