@@ -34,7 +34,7 @@
  channels, and selecting one should allow the user to view the
  channel. We leave it to you to decide how to display such a list.
 
-*** TODO *Messages View*: Once a channel is selected, the user should see any
+*** DONE *Messages View*: Once a channel is selected, the user should see any
  messages that have already been sent in that channel, up to a maximum
  of 100 messages. Your app should only store the 100 most recent
  messages per channel in server-side memory.
