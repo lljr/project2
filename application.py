@@ -128,6 +128,7 @@ def handle_message(data):
 
     send({
         "type": "message",
+        "sender": data["username"],
         "room": data['room'],
         "message": data["message"]
     }, room=data["room"], json=True)
