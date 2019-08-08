@@ -51,13 +51,20 @@ document.addEventListener('DOMContentLoaded', () => {
                      data.username);
       break;
     case "message":
-      const roomMsgList = document.querySelector(`#${data.room}-msglist`);
-      const localLi = document.createElement("li");
-      localLi.textContent = data.message;
 
-      roomMsgList.appendChild(localLi);
+      // TODO If sender equals local storage username dont add it
+      if (data.sender !== localStorage.getItem("username")) {
+        const roomMsgList = document.querySelector(`#${data.room}-msglist`);
+        const localLi = document.createElement("li");
+        localLi.textContent = new Date() + `<${data.sender}>` + data.message;
+        roomMsgList.appendChild(localLi);
+      }
 
       break;
+    case "join":
+      // TODO Insert message to conversation board
+      break;
+
 
     }
 
