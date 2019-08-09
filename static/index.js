@@ -56,7 +56,8 @@ document.addEventListener('DOMContentLoaded', () => {
       if (data.sender !== localStorage.getItem("username")) {
         const roomMsgList = document.querySelector(`#${data.room}-msglist`);
         const localLi = document.createElement("li");
-        localLi.textContent = new Date() + `<${data.sender}>` + data.message;
+        const date = new Date(data.date)
+        localLi.innerHTML = date.toDateString() + '|' + date.getHours()+ ':'+ date.getMinutes() + `<${data.sender}>` + data.message;
         roomMsgList.appendChild(localLi);
       }
 

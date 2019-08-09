@@ -1,6 +1,8 @@
 import collections
 import os
 
+from datetime import datetime, timezone
+
 from flask import Flask, render_template, request, session, jsonify, redirect,\
     url_for
 
@@ -102,9 +104,11 @@ def handle_channel(data):
 @socketio.on('join')
 def on_join(data):
     """User joins room."""
+
     username = data['username']
     room = data['room']
     join_room(room)
+
     send({
         "message": "{0} has entered the room.".format(username),
         "type": "join",
@@ -112,7 +116,6 @@ def on_join(data):
     }, room=room, json=True)
 
     current_messages = list(db["channels"][room]["messages"])
-    print(current_messages)
     return "ok", list(current_messages)
 
 
@@ -120,18 +123,22 @@ def on_join(data):
 def handle_message(data):
     """Send messages to rooms."""
 
+    date = datetime.now(timezone.utc)
     room = db["channels"].get(data["room"])
     room["messages"].append({
         "sender": data["username"],
-        "content": data["message"]
+        "content": data["message"],
+        "date": str(date)
     })
 
     send({
         "type": "message",
         "sender": data["username"],
         "room": data['room'],
-        "message": data["message"]
+        "message": data["message"],
+        "date": str(date)
     }, room=data["room"], json=True)
+
     return "ok"
 
 
