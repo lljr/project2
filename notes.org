@@ -52,13 +52,16 @@
  application should remember what channel the user was on previously
  and take the user back to that channel.
 
-*** *Personal Touch*: Add at least one additional feature to your chat
+ - I've thought of implementing this with a single localStorage item
+   called `chatting' set equal to room that was last chatted on.
+
+*** TODO *Personal Touch*: Add at least one additional feature to your chat
  application of your choosing! Feel free to be creative, but if you're
  looking for ideas, possibilities include: supporting deleting one's
  own messages, supporting use attachments (file uploads) as messages,
  or supporting private messaging between two users.
 
-*** In =README.md=, include a short writeup describing your project,
+*** TODO In =README.md=, include a short writeup describing your project,
  what's contained in each file, and (optionally) any other additional
  information the staff should know about your project. Also, include a
  description of your personal touch and what you chose to add to the
