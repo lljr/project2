@@ -109,9 +109,11 @@ def on_join(data):
     room = data['room']
     join_room(room)
 
+    # TODO First let the user join
+    # TODO Then tell everyone
     send({
-        "message": "{0} has entered the room.".format(username),
-        "type": "join",
+        "type": "message",
+        "message": f"{username} has entered the room.",
         "room": room
     }, room=room, json=True)
 
