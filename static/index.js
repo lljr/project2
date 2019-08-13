@@ -200,9 +200,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
     }
-}
+  }
 
 });
+
+function syncConversation() {};
 
 function syncWithServer(ul, channels, username) {
 
