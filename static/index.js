@@ -42,8 +42,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
   socket.on("json", data => {
 
-    console.log(data);
-
     switch(data.type) {
     case "sync":
       syncWithServer(document.querySelector("#livechannels > ul"),
@@ -51,48 +49,60 @@ document.addEventListener('DOMContentLoaded', () => {
                      data.username);
       break;
     case "message":
-
-      // TODO If sender equals local storage username dont add it
-      if (data.sender !== localStorage.getItem("username")) {
-        const roomMsgList = document.querySelector(`#${data.room}-msglist`);
-        const localLi = document.createElement("li");
-        const date = new Date(data.date)
-        localLi.innerHTML = date.toDateString() + '|' + date.getHours()+ ':'+ date.getMinutes() + `<${data.sender}>` + data.message;
-        roomMsgList.appendChild(localLi);
-      }
-
+      inserNewMsg(data);
       break;
     case "join":
-      // TODO Insert message to conversation board
-      break;
 
+      break;
 
     }
 
   });
 
-  function setUpChatRoom(room) {
-    // Show room
 
-    // TODO Clean up function signature
+
+  function inserNewMsg(data) {
+    const room = document.querySelector(`#${data.room}-msglist`);
+    const li = document.createElement("li");
+
+    // Append msg immediately if sent by server
+    if (!data.sender) {
+      li.textContent = message;
+      room.appendChild(li);
+    }
+
+    if (data.sender !== localStorage.getItem("username")) {
+      const date = new Date(data.date)
+
+      li.textContent = addTimestamp(addSender(data.content, data.sender),
+                                    date);
+      room.appendChild(li);
+    }
+  }
+
+  function setUpChatRoom(room) {
+
     const convoContainer = document.querySelector("#chat-convos");
 
+    // Show room
     const chatRoom = document.createElement("div");
     chatRoom.setAttribute("class", "col");
-    // For now it is a board... perhaps in the future the chat rooms will have tabbed views
     chatRoom.setAttribute("id", `${room}-board`);
 
     convoContainer.appendChild(chatRoom);
 
-    // TODO handle pushing to joined rooms local storage array outside of this function
+    // Each room gets a title
     const title = document.createElement("h4");
     title.textContent = room;
+
+    // Creates a list of messages
     const parentList = document.createElement("ul");
     parentList.setAttribute("id", `${room}-msglist`);
     parentList.setAttribute("data-room", room);
 
     parentList.appendChild(title);
 
+    // Where messages will be typed
     const sendMsgs = document.createElement("form");
     const msgInput = document.createElement("input");
     msgInput.setAttribute("id", `${room}-msg`);
@@ -100,38 +110,51 @@ document.addEventListener('DOMContentLoaded', () => {
     const sendMsgButton = document.createElement("button");
     sendMsgButton.textContent = "Send";
 
+    // Make room appear in window
     sendMsgs.appendChild(msgInput);
     sendMsgs.appendChild(sendMsgButton);
-
     chatRoom.appendChild(parentList);
     chatRoom.appendChild(sendMsgs);
 
-    // TODO Refactor so that messages get sent to server
+    // Send typed messages to server
     sendMsgs.addEventListener("submit", event => handleMsgSending(event) );
   }
 
   function handleMsgSending(e) {
-    const msgList = e.currentTarget.parentNode.querySelector("ul");
 
+    const msgList = e.currentTarget.parentNode.querySelector("ul");
     const input = e.currentTarget.querySelector("input");
 
     const msg = document.createElement("li");
 
-    // TODO Maybe it is not a good idea to append here
-    // bc messages get duplicated in "json" event handler
-    msg.textContent = input.value;
+    const rightNow = new Date();
+    const username = localStorage.getItem("username");
+
+    msg.textContent = addTimestamp(addSender(input.value, username), rightNow);
     msgList.appendChild(msg);
 
     socket.send({
       "room": msgList.dataset.room,
-      "username": localStorage.getItem("username"),
+      "username": username,
       "message": input.value
-    }, (ok)=> {
+    }, ok => {
+      // TODO If not ok ask to resend message
       console.log("ok");
-    })
+    });
 
     e.currentTarget.reset();
     e.preventDefault();
+  }
+
+  function addSender(message, username) {
+    // Associates message with sender
+    return `<${username}> ${message}`;
+  }
+
+  function addTimestamp(message, date) {
+     // Adds time of creation to message
+
+     return `[${date.getHours()}:${date.getMinutes()}] ${message}`;
   }
 
   // TODO Add this when message reply is implemented
@@ -151,6 +174,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function joinRoom(event) {
     const clickedEl = event.target;
+
     if (clickedEl.nodeName === "LI") {
       console.log("i clicked list!")
       // TODO check the user joined the channel
@@ -158,6 +182,8 @@ document.addEventListener('DOMContentLoaded', () => {
       // This is local
     } else if (clickedEl.nodeName === "BUTTON") {
       const li = clickedEl.parentNode;
+      const room = li.dataset.channel;
+
       // TODO switchChatView()
       // This requires server manipulation
       if(clickedEl.textContent === "Join") {
@@ -165,33 +191,25 @@ document.addEventListener('DOMContentLoaded', () => {
 
         socket.emit('join', {
           username: name,
-          room: li.dataset.channel
+          room: room
         }, (ok, messages) => {
           // TODO Handle refresh so that msgs persists and chat room doesnt get added again to DOM
+          // i.e. second to last pset requirement
           if (ok === "ok") {
-
-
 
             clickedEl.textContent = "Leave";
             clickedEl.classList.remove("btn-primary");
             clickedEl.classList.add("btn-warning");
 
-            setUpChatRoom(li.dataset.channel);
-            // NOTE This works
-            console.log("received these previous msgs: ");
+            setUpChatRoom(room);
 
-            const roomMsgList = document.querySelector(`#${li.dataset.channel}-msglist`);
-            console.log(messages);
-
+            const roomMsgList = document.querySelector(`#${room}-msglist`);
             messages.forEach(message => {
-              console.log(message.content);
-
               const li = document.createElement("li");
-              li.textContent = message.content;
-
+              li.textContent = addTimestamp(addSender(message.content, message.sender), message.date);
               roomMsgList.appendChild(li);
-
             });
+
 
           }
         });
