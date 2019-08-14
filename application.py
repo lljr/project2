@@ -104,17 +104,22 @@ def on_join(data):
     room = data['room']
     join_room(room)
 
-    # 1. TODO First let the user join
+    current_messages = list(db["channels"][room]["messages"])
+    # 1. First let the user join
+    send({
+        "type": "join",
+        "room": room,
+        "messages": current_messages
+    }, json=True)
 
-    # 2. TODO Then tell everyone
+    # 2. Then tell everyone
     send({
         "type": "message",
         "message": f"{username} has entered the room.",
         "room": room
     }, room=room, json=True)
 
-    current_messages = list(db["channels"][room]["messages"])
-    return "ok", list(current_messages)
+    return "ok"
 
 
 @socketio.on('message')
