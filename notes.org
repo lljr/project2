@@ -121,6 +121,8 @@ if __name__ == '__main__':
     socketio.run(app, debug=True, host="0.0.0.0")
 #+END_SRC
 
+although =host= is optinal
+
 ** getAttribute() vs .value
 .value gets input value in real time
 
