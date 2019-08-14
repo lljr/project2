@@ -130,12 +130,12 @@ detailed explanation [[https://stackoverflow.com/questions/11973678/difference-b
 
 ** Bugs
 
-*** index.js [2/3]
+*** index.js [3/3]
 
  - [X] =updateLiveChannelsList= invocation re-inserts list items when newer
 item becomes available in the server-side
 
-- [ ] before login, several tags are not defined, maybe seperate each function by loading it
+- [X] before login, several tags are not defined, maybe seperate each function by loading it
 by its corresponding view
 
 - [X] the "create channel" form allows entering empty fields
