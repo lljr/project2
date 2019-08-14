@@ -42,11 +42,6 @@ def adduser():
     else:
         return render_template("adduser.html")
 
-# @app.route("/chat")
-# @login_required
-# def chat():
-#     return render_template("chat.html")
-
 
 @app.route("/leave")
 def logout():
