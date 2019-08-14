@@ -2,16 +2,29 @@
 {% block title %}Add User{% endblock %}
 {% block main %}
 
-  <form id="user-form" method="POST" action="/adduser">
-    <div class="row">
-      <div class="col">
-        <input id="username" required name="username" class="form-control" type="text" placeholder="Enter a username" />
+
+
+  <div class="row align-items-center justify-content-center h-100">
+    <div class="col">
+      <div class="jumbotron">
+        <h2 class="text-center py-3">Flack!</h2>
+        <form class="form-inline py-2" id="user-form" method="POST" action="/adduser">
+          <div class="row">
+            <div class="col">
+              <input id="username" required name="username" class="form-control" type="text" placeholder="Enter a username" />
+            </div>
+            <div class="col">
+              <button class="btn btn-dark">Start</button>
+            </div>
+          </div>
+        </form>
+
       </div>
 
-      <div class="col">
-        <button class="btn btn-dark">Start</button>
-      </div>
     </div>
-  </form>
+
+  </div>
+
+
 
 {% endblock %}
