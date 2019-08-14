@@ -66,10 +66,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const room = document.querySelector(`#${data.room}-msglist`);
     const li = document.createElement("li");
 
-    // Msg sent by server notifying new users joins chat
+    // Msg sent by server notifying new user joins chat
     if (!data.sender) {
       li.textContent = data.message;
-      li.style.color = "LightGray";
+      li.style.color = "Gray";
       room.appendChild(li);
     }
     else if (data.sender !== localStorage.getItem("username")) {
