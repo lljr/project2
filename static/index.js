@@ -4,221 +4,202 @@ document.addEventListener('DOMContentLoaded', () => {
   // When connected, configure buttons
   socket.on('connect', () => {
 
-    document.querySelector("#channelform").onsubmit = () => {
+    const createChannel = document.querySelector("#channelform");
+    createChannel.addEventListener(function(event) {
+
       const channelNameInput = document.querySelector("#channelname");
       socket.emit('create channel', {
         'channel': channelNameInput.value
-      })
+      });
 
-      // Clear out input field
-      channelNameInput.value = '';
-      return false;
-    }
+      event.currentTarget.reset();
+      event.target.preventDefault();
+    });
 
     const ul = document.querySelector("#livechannels > ul");
     // https://davidwalsh.name/event-delegate
     ul.addEventListener("click", e => joinRoom(e));
   });
 
-  socket.on('disconnect', () => localStorage.clear());
+});
 
-  socket.on('channel created?', data => {
-    document.querySelector('#message').innerHTML = `${data.message}`;
-    // Assume data.channel comes empty when channel already exists
-    // if not then update the channels list by appending the last channel
-    if (data.channel)
-      updateChannelsList(data.channel,
-                         document.querySelector("#livechannels > ul"));
+socket.on('disconnect', () => localStorage.clear());
+
+socket.on('channel created?', data => {
+  document.querySelector('#message').innerHTML = `${data.message}`;
+  // Assume data.channel comes empty when channel already exists
+  // if not then update the channels list by appending the last channel
+  if (data.channel)
+    updateChannelsList(data.channel,
+                       document.querySelector("#livechannels > ul"));
+});
+
+socket.on("message", data => { console.log(data)  });
+
+socket.on("json", data => {
+
+  switch(data.type) {
+  case "sync":
+    syncWithServer(document.querySelector("#livechannels > ul"),
+                   data.channels,
+                   data.username);
+    break;
+  case "message":
+    inserNewMsg(data);
+    break;
+  case "join":
+
+    break;
+
+  }
+
+});
+
+
+
+function inserNewMsg(data) {
+  const room = document.querySelector(`#${data.room}-msglist`);
+  const li = document.createElement("li");
+
+  // Append msg immediately if sent by server
+  if (!data.sender) {
+    li.textContent = message;
+    room.appendChild(li);
+  }
+
+  if (data.sender !== localStorage.getItem("username")) {
+    const date = new Date(data.date)
+
+    li.textContent = addTimestamp(addSender(data.content, data.sender),
+                                  date);
+    room.appendChild(li);
+  }
+}
+
+function setUpChatRoom(room) {
+
+  const convoContainer = document.querySelector("#chat-convos");
+
+  // Show room
+  const chatRoom = document.createElement("div");
+  chatRoom.setAttribute("class", "col");
+  chatRoom.setAttribute("id", `${room}-board`);
+
+  convoContainer.appendChild(chatRoom);
+
+  // Each room gets a title
+  const title = document.createElement("h4");
+  title.textContent = room;
+
+  // Creates a list of messages
+  const parentList = document.createElement("ul");
+  parentList.setAttribute("id", `${room}-msglist`);
+  parentList.setAttribute("data-room", room);
+
+  parentList.appendChild(title);
+
+  // Where messages will be typed
+  const sendMsgs = document.createElement("form");
+  const msgInput = document.createElement("input");
+  msgInput.setAttribute("id", `${room}-msg`);
+
+  const sendMsgButton = document.createElement("button");
+  sendMsgButton.textContent = "Send";
+
+  // Make room appear in window
+  sendMsgs.appendChild(msgInput);
+  sendMsgs.appendChild(sendMsgButton);
+  chatRoom.appendChild(parentList);
+  chatRoom.appendChild(sendMsgs);
+
+  // Send typed messages to server
+  sendMsgs.addEventListener("submit", event => handleMsgSending(event) );
+}
+
+function handleMsgSending(e) {
+
+  const msgList = e.currentTarget.parentNode.querySelector("ul");
+  const input = e.currentTarget.querySelector("input");
+
+  const msg = document.createElement("li");
+
+  const rightNow = new Date();
+  const username = localStorage.getItem("username");
+
+  msg.textContent = addTimestamp(addSender(input.value, username), rightNow);
+  msgList.appendChild(msg);
+
+  socket.send({
+    "room": msgList.dataset.room,
+    "username": username,
+    "message": input.value
+  }, ok => {
+    // TODO If not ok ask to resend message
+    console.log("ok");
   });
 
-  socket.on("message", data => {
-    console.log(data);
-    // TODO move this to message handler function
-    // const message = document.createElement("li");
-    // message.textContent = message;
-    // parentList.appendChild(message);
+  e.currentTarget.reset();
+  e.preventDefault();
+}
 
-  });
+function addSender(message, username) {
+  // Associates message with sender
+  return `<${username}> ${message}`;
+}
 
-  socket.on("json", data => {
+function addTimestamp(message, date) {
+  // Adds time of creation to message
 
-    switch(data.type) {
-    case "sync":
-      syncWithServer(document.querySelector("#livechannels > ul"),
-                     data.channels,
-                     data.username);
-      break;
-    case "message":
-      inserNewMsg(data);
-      break;
-    case "join":
+  return `[${date.getHours()}:${date.getMinutes()}] ${message}`;
+}
 
-      break;
+function joinRoom(event) {
+  const clickedEl = event.target;
 
+  if (clickedEl.nodeName === "LI") {
+    console.log("i clicked list!")
+    // TODO check the user joined the channel
+    // TODO switchChatView()
+    // This is local
+  } else if (clickedEl.nodeName === "BUTTON") {
+    const li = clickedEl.parentNode;
+    const room = li.dataset.channel;
+
+    // TODO switchChatView()
+    // This requires server manipulation
+    if(clickedEl.textContent === "Join") {
+      let name = localStorage.getItem("username");
+
+      socket.emit('join', {
+        username: name,
+        room: room
+      }, (ok, messages) => {
+        // TODO Handle refresh so that msgs persists and chat room doesnt get added again to DOM
+        // i.e. second to last pset requirement
+        if (ok === "ok") {
+
+          clickedEl.textContent = "Leave";
+          clickedEl.classList.remove("btn-primary");
+          clickedEl.classList.add("btn-warning");
+
+          setUpChatRoom(room);
+
+          const roomMsgList = document.querySelector(`#${room}-msglist`);
+          messages.forEach(message => {
+            const li = document.createElement("li");
+            li.textContent = addTimestamp(addSender(message.content, message.sender), message.date);
+            roomMsgList.appendChild(li);
+          });
+
+
+        }
+      });
     }
 
-  });
 
 
-
-  function inserNewMsg(data) {
-    const room = document.querySelector(`#${data.room}-msglist`);
-    const li = document.createElement("li");
-
-    // Append msg immediately if sent by server
-    if (!data.sender) {
-      li.textContent = message;
-      room.appendChild(li);
-    }
-
-    if (data.sender !== localStorage.getItem("username")) {
-      const date = new Date(data.date)
-
-      li.textContent = addTimestamp(addSender(data.content, data.sender),
-                                    date);
-      room.appendChild(li);
-    }
   }
-
-  function setUpChatRoom(room) {
-
-    const convoContainer = document.querySelector("#chat-convos");
-
-    // Show room
-    const chatRoom = document.createElement("div");
-    chatRoom.setAttribute("class", "col");
-    chatRoom.setAttribute("id", `${room}-board`);
-
-    convoContainer.appendChild(chatRoom);
-
-    // Each room gets a title
-    const title = document.createElement("h4");
-    title.textContent = room;
-
-    // Creates a list of messages
-    const parentList = document.createElement("ul");
-    parentList.setAttribute("id", `${room}-msglist`);
-    parentList.setAttribute("data-room", room);
-
-    parentList.appendChild(title);
-
-    // Where messages will be typed
-    const sendMsgs = document.createElement("form");
-    const msgInput = document.createElement("input");
-    msgInput.setAttribute("id", `${room}-msg`);
-
-    const sendMsgButton = document.createElement("button");
-    sendMsgButton.textContent = "Send";
-
-    // Make room appear in window
-    sendMsgs.appendChild(msgInput);
-    sendMsgs.appendChild(sendMsgButton);
-    chatRoom.appendChild(parentList);
-    chatRoom.appendChild(sendMsgs);
-
-    // Send typed messages to server
-    sendMsgs.addEventListener("submit", event => handleMsgSending(event) );
-  }
-
-  function handleMsgSending(e) {
-
-    const msgList = e.currentTarget.parentNode.querySelector("ul");
-    const input = e.currentTarget.querySelector("input");
-
-    const msg = document.createElement("li");
-
-    const rightNow = new Date();
-    const username = localStorage.getItem("username");
-
-    msg.textContent = addTimestamp(addSender(input.value, username), rightNow);
-    msgList.appendChild(msg);
-
-    socket.send({
-      "room": msgList.dataset.room,
-      "username": username,
-      "message": input.value
-    }, ok => {
-      // TODO If not ok ask to resend message
-      console.log("ok");
-    });
-
-    e.currentTarget.reset();
-    e.preventDefault();
-  }
-
-  function addSender(message, username) {
-    // Associates message with sender
-    return `<${username}> ${message}`;
-  }
-
-  function addTimestamp(message, date) {
-     // Adds time of creation to message
-
-     return `[${date.getHours()}:${date.getMinutes()}] ${message}`;
-  }
-
-  // TODO Add this when message reply is implemented
-  // function insertMsgToChatRoom(e) {
-  //   const msgList = e.currentTarget.parentNode.querySelector("ul");
-
-  //   const input = e.currentTarget.querySelector("input");
-
-  //   const msg = document.createElement("li");
-
-  //   msg.textContent = input.value;
-  //   msgList.appendChild(msg);
-
-  //   e.currentTarget.reset();
-  //   e.preventDefault();
-  // }
-
-  function joinRoom(event) {
-    const clickedEl = event.target;
-
-    if (clickedEl.nodeName === "LI") {
-      console.log("i clicked list!")
-      // TODO check the user joined the channel
-      // TODO switchChatView()
-      // This is local
-    } else if (clickedEl.nodeName === "BUTTON") {
-      const li = clickedEl.parentNode;
-      const room = li.dataset.channel;
-
-      // TODO switchChatView()
-      // This requires server manipulation
-      if(clickedEl.textContent === "Join") {
-        let name = localStorage.getItem("username");
-
-        socket.emit('join', {
-          username: name,
-          room: room
-        }, (ok, messages) => {
-          // TODO Handle refresh so that msgs persists and chat room doesnt get added again to DOM
-          // i.e. second to last pset requirement
-          if (ok === "ok") {
-
-            clickedEl.textContent = "Leave";
-            clickedEl.classList.remove("btn-primary");
-            clickedEl.classList.add("btn-warning");
-
-            setUpChatRoom(room);
-
-            const roomMsgList = document.querySelector(`#${room}-msglist`);
-            messages.forEach(message => {
-              const li = document.createElement("li");
-              li.textContent = addTimestamp(addSender(message.content, message.sender), message.date);
-              roomMsgList.appendChild(li);
-            });
-
-
-          }
-        });
-      }
-
-
-
-    }
-  }
+}
 
 });
 
