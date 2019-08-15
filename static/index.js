@@ -88,39 +88,76 @@ document.addEventListener('DOMContentLoaded', () => {
     const convoContainer = document.querySelector("#chat-convos");
 
     // Show room
+    const chatRoomRow = document.createElement("div");
+    chatRoomRow.setAttribute("class", "row message-board no-gutters align-items-end");
+
     const chatRoom = document.createElement("div");
     chatRoom.setAttribute("class", "col");
     chatRoom.setAttribute("id", `${room}-board`);
 
-    convoContainer.appendChild(chatRoom);
+    convoContainer.appendChild(chatRoomRow);
+    chatRoomRow.appendChild(chatRoom);
 
     // Each room gets a title
     const title = document.createElement("h4");
     title.textContent = room;
+    title.setAttribute("class", "align-self-start")
+    chatRoomRow.appendChild(title);
 
     // Creates a list of messages
     const parentList = document.createElement("ul");
     parentList.setAttribute("id", `${room}-msglist`);
     parentList.setAttribute("data-room", room);
-
-    parentList.appendChild(title);
+    parentList.setAttribute("class", "p-0");
 
     // Where messages will be typed
-    const sendMsgs = document.createElement("form");
+      //     <form id="channelform">
+      //   <div class="form-group row">
+      //     <div class="col">
+      //       <input id="channelname" class="form-control" placeholder="Channel name" type="text">
+      //     </div>
+      //     <div class="col">
+      //       <button type="submit" class="btn btn-dark">Create</button>
+      //     </div>
+      //   </div>
+    // </form>
+    // Create form structure
+    // TODO Use input-group instead of form-group
+    const sendMsgForm = document.createElement("form");
+    const formGroupRow = document.createElement("div");
+    formGroupRow.setAttribute("class", "form-group row no-gutters");
+
+    const formGroupColInput = document.createElement("div");
+    formGroupColInput.setAttribute("class", "col-10");
+
+    const formGroupColBtn = document.createElement("div");
+    formGroupColBtn.setAttribute("class", "col ml-2");
+
+    formGroupRow.appendChild(formGroupColInput);
+    formGroupRow.appendChild(formGroupColBtn);
+
+
+
+    //
     const msgInput = document.createElement("input");
     msgInput.setAttribute("id", `${room}-msg`);
+    msgInput.setAttribute("class", "form-control");
+
+    formGroupColInput.appendChild(msgInput);
 
     const sendMsgButton = document.createElement("button");
     sendMsgButton.textContent = "Send";
+    sendMsgButton.setAttribute("class", "btn btn-secondary");
+
+    formGroupColBtn.appendChild(sendMsgButton);
 
     // Make room appear in window
-    sendMsgs.appendChild(msgInput);
-    sendMsgs.appendChild(sendMsgButton);
+    sendMsgForm.appendChild(formGroupRow);
     chatRoom.appendChild(parentList);
-    chatRoom.appendChild(sendMsgs);
+    chatRoom.appendChild(sendMsgForm);
 
     // Send typed messages to server
-    sendMsgs.addEventListener("submit", event => handleMsgSending(event) );
+    sendMsgForm.addEventListener("submit", event => handleMsgSending(event) );
   }
 
   function handleMsgSending(e) {
@@ -193,10 +230,9 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!localStorage.getItem("username")) {
       localStorage.setItem("username", username);
     }
-    // Should always sync with server
+    // Should always populate channels list
     clearOutListData(ul);
     channels.forEach(channel => updateChannelsList(channel, ul));
-    console.log("synced!");
   }
 
   function updateChannelsList(channelName, ul) {
