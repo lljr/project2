@@ -60,9 +60,7 @@ document.addEventListener('DOMContentLoaded', () => {
         li.textContent = addTimestamp(addSender(message.content, message.sender), date);
         roomMsgList.appendChild(li);
       });
-
       break;
-
     }
 
   });
