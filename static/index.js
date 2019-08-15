@@ -4,6 +4,8 @@ document.addEventListener('DOMContentLoaded', () => {
   // When connected, configure buttons
   socket.on('connect', () => {
 
+
+    console.log("connected!")
     const createChannel = document.querySelector("#channelform");
     createChannel.addEventListener("submit", event => {
 
@@ -20,7 +22,9 @@ document.addEventListener('DOMContentLoaded', () => {
     // https://davidwalsh.name/event-delegate
     ul.addEventListener("click", e => joinRoom(e));
   });
-  socket.on('disconnect', () => localStorage.clear());
+  socket.on('disconnect', () =>
+            {console.log("disconnected!")
+            localStorage.clear()});
 
   socket.on('channel created?', data => {
     document.querySelector('#message').innerHTML = `${data.message}`;
@@ -186,14 +190,14 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function syncWithServer(ul, channels, username) {
-
     // On login
     if (!localStorage.getItem("username")) {
       localStorage.setItem("username", username);
-
-      clearOutListData(ul);
-      channels.forEach(channel => updateChannelsList(channel, ul));
     }
+    // Should always sync with server
+    clearOutListData(ul);
+    channels.forEach(channel => updateChannelsList(channel, ul));
+    console.log("synced!");
   }
 
   function updateChannelsList(channelName, ul) {
