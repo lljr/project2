@@ -21,9 +21,11 @@ document.addEventListener('DOMContentLoaded', () => {
     // https://davidwalsh.name/event-delegate
     ul.addEventListener("click", e => joinRoom(e));
   });
-  socket.on('disconnect', () =>
-            {console.log("disconnected!")
-            localStorage.clear()});
+
+  socket.on('disconnect', () =>{
+    console.log("disconnected!")
+    // localStorage.clear(); This makes no sense...
+  });
 
   socket.on('channel created?', data => {
     document.querySelector('#message').innerHTML = `${data.message}`;
