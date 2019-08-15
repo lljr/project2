@@ -6,4 +6,12 @@
   min-height: 90vh;
 }
 
+.make-height-window-size-convo {
+  height: 85vh;
+}
+
+.message-board {
+  height: 100%;
+}
+
 /*# sourceMappingURL=style.css.map */
