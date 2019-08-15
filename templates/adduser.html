@@ -2,29 +2,18 @@
 {% block title %}Add User{% endblock %}
 {% block main %}
 
-
-
-  <div class="row align-items-center justify-content-center h-100">
-    <div class="col">
-      <div class="jumbotron">
-        <h2 class="text-center py-3">Flack!</h2>
-        <form class="form-inline py-2" id="user-form" method="POST" action="/adduser">
-          <div class="row">
-            <div class="col">
-              <input id="username" required name="username" class="form-control" type="text" placeholder="Enter a username" />
-            </div>
-            <div class="col">
-              <button class="btn btn-dark">Start</button>
-            </div>
-          </div>
-        </form>
-
-      </div>
-
+  <div class="row justify-content-center align-items-center make-height-window-size">
+    <div class="col-sm-6 jumbotron d-flex flex-column align-items-center">
+      <h2 class="py-3">Flack!</h2>
+      <form class="form-inline" method="POST" action="{{url_for('adduser')}}">
+        <div class="form-group mx-sm-2 mb-2">
+          <label for="username" class="sr-only">Username</label>
+          <input  required name="username" type="text" class="form-control" id="username" placeholder="Choose a name">
+        </div>
+        <button type="submit" class="btn btn-primary mb-2">Start Chat</button>
+      </form>
     </div>
 
   </div>
-
-
 
 {% endblock %}

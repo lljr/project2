@@ -2,4 +2,8 @@
   list-style-type: none;
 }
 
+.make-height-window-size {
+  min-height: 90vh;
+}
+
 /*# sourceMappingURL=style.css.map */
