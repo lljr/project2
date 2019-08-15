@@ -36,7 +36,7 @@ document.addEventListener('DOMContentLoaded', () => {
                          document.querySelector("#livechannels > ul"));
   });
 
-  socket.on("message", data => { console.log(data)  });
+  socket.on("message", data => {console.log(data)});
 
   socket.on("json", data => {
 
