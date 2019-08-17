@@ -158,6 +158,8 @@ document.addEventListener('DOMContentLoaded', () => {
     msg.textContent = addTimestamp(addSender(input.value, username), rightNow);
     msgList.appendChild(msg);
 
+    msg.scrollIntoView();
+
     socket.send({
       "room": msgList.dataset.room,
       "username": username,
