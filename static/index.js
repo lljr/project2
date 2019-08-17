@@ -89,7 +89,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Show room
     const chatRoomRow = document.createElement("div");
-    chatRoomRow.setAttribute("class", "row message-board no-gutters align-items-end");
+    chatRoomRow.setAttribute("class", "row message-board no-gutters");
 
     const chatRoom = document.createElement("div");
     chatRoom.setAttribute("class", "col");
@@ -101,58 +101,43 @@ document.addEventListener('DOMContentLoaded', () => {
     // Each room gets a title
     const title = document.createElement("h4");
     title.textContent = room;
-    title.setAttribute("class", "align-self-start")
-    chatRoomRow.appendChild(title);
+    title.setAttribute("class", "mb-auto border-bottom");
+    chatRoom.appendChild(title);
 
     // Creates a list of messages
     const parentList = document.createElement("ul");
     parentList.setAttribute("id", `${room}-msglist`);
     parentList.setAttribute("data-room", room);
-    parentList.setAttribute("class", "p-0");
+    parentList.setAttribute("class", "p-0 mt-2 text-wrap");
+
+
+    // Create form structure
+    const sendMsgForm = document.createElement("form");
+    const inputGroup = document.createElement("div");
+    inputGroup.setAttribute("class", "input-group mb-3");
+
+    const inputGroupBtnWrapper = document.createElement("div");
+    inputGroupBtnWrapper.setAttribute("class", "input-group-append");
 
     // Where messages will be typed
-      //     <form id="channelform">
-      //   <div class="form-group row">
-      //     <div class="col">
-      //       <input id="channelname" class="form-control" placeholder="Channel name" type="text">
-      //     </div>
-      //     <div class="col">
-      //       <button type="submit" class="btn btn-dark">Create</button>
-      //     </div>
-      //   </div>
-    // </form>
-    // Create form structure
-    // TODO Use input-group instead of form-group
-    const sendMsgForm = document.createElement("form");
-    const formGroupRow = document.createElement("div");
-    formGroupRow.setAttribute("class", "form-group row no-gutters");
-
-    const formGroupColInput = document.createElement("div");
-    formGroupColInput.setAttribute("class", "col-10");
-
-    const formGroupColBtn = document.createElement("div");
-    formGroupColBtn.setAttribute("class", "col ml-2");
-
-    formGroupRow.appendChild(formGroupColInput);
-    formGroupRow.appendChild(formGroupColBtn);
-
-
-
-    //
     const msgInput = document.createElement("input");
     msgInput.setAttribute("id", `${room}-msg`);
     msgInput.setAttribute("class", "form-control");
+    msgInput.setAttribute("placeholder", "Type a message");
+    msgInput.setAttribute("aria-label", "Sender's message");
+    msgInput.setAttribute("aria-describedby", "basic-addon2");
 
-    formGroupColInput.appendChild(msgInput);
 
     const sendMsgButton = document.createElement("button");
     sendMsgButton.textContent = "Send";
-    sendMsgButton.setAttribute("class", "btn btn-secondary");
+    sendMsgButton.setAttribute("class", "input-group-text btn btn-secondary");
 
-    formGroupColBtn.appendChild(sendMsgButton);
+    inputGroup.appendChild(msgInput);
+    inputGroupBtnWrapper.appendChild(sendMsgButton);
+    inputGroup.appendChild(inputGroupBtnWrapper);
 
     // Make room appear in window
-    sendMsgForm.appendChild(formGroupRow);
+    sendMsgForm.appendChild(inputGroup);
     chatRoom.appendChild(parentList);
     chatRoom.appendChild(sendMsgForm);
 
