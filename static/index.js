@@ -219,6 +219,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!localStorage.getItem("username")) {
       localStorage.setItem("username", username);
     }
+
     // Should always populate channels list
     clearOutListData(ul);
     channels.forEach(channel => updateChannelsList(channel, ul));
