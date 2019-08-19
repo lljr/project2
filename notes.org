@@ -47,7 +47,7 @@
  channel page. Sending and receiving messages should NOT require
  reloading the page.
 
-*** TODO *Remembering the Channel*: If a user is on a channel page, closes the
+*** DONE *Remembering the Channel*: If a user is on a channel page, closes the
  web browser window, and goes back to your web application, your
  application should remember what channel the user was on previously
  and take the user back to that channel.
