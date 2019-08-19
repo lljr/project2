@@ -204,15 +204,18 @@ document.addEventListener('DOMContentLoaded', () => {
         socket.emit('join', {
           username: name,
           room: room
-        }, (ok, messages) => {
-          // TODO Handle refresh so that msgs persists and chat room doesnt get added again to DOM
-          // i.e. second to last pset requirement
+        }, ok => {
+
           if (ok === "ok") {
             clickedEl.textContent = "Leave";
             clickedEl.classList.remove("btn-primary");
             clickedEl.classList.add("btn-warning");
           }
+          // TODO Check that localStorage has no other 'joined' channel
         });
+      } else {
+        // TODO Send mesage to socket that user is leaving chat room
+        // TODO Do the updating of the tab window in the UI
       }
 
     }
