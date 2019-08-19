@@ -196,29 +196,84 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const clickedEl = event.target;
 
-    // Allow user to only join _1_ room=
+    // Allow user to join only _1_ room
     if (clickedEl.nodeName === "BUTTON") {
       const li = clickedEl.parentNode;
       const room = li.dataset.channel;
+      let username = localStorage.getItem("username");
 
       if(clickedEl.textContent === "Join") {
-        let name = localStorage.getItem("username");
-
         socket.emit('join', {
-          username: name,
+          username: username,
           room: room
         }, ok => {
 
-          if (ok === "ok") {
+          // First time joining
+          if (!localStorage.getItem("joined")) {
+
+            localStorage.setItem("joined", room);
+
+            // Toggle the BUTTON's text content to 'leave' on the newly joined room
             clickedEl.textContent = "Leave";
             clickedEl.classList.remove("btn-primary");
             clickedEl.classList.add("btn-warning");
           }
-          // TODO Check that localStorage has no other 'joined' channel
+
+          // Leave the previously joined room
+          if (localStorage.getItem("joined") !== room) {
+
+            socket.emit("leave", {
+              username: username,
+              room: room
+            });
+
+            // Toggle the BUTTON's text content to 'join' on the previously joined room
+            const previouslyJoined = li.parentNode
+                                       .querySelector(`#channel-item-${localStorage.getItem("joined")} button`);
+
+            previouslyJoined.textContent = "Join";
+            previouslyJoined.classList.remove("btn-warning");
+            previouslyJoined.classList.add("btn-primary");
+
+            // Remember new joined room
+            localStorage.setItem("joined", room);
+
+            // Toggle the BUTTON's text content to 'leave' on the newly joined room
+            clickedEl.textContent = "Leave";
+            clickedEl.classList.remove("btn-primary");
+            clickedEl.classList.add("btn-warning");
+          }
+
         });
+
       } else {
-        // TODO Send mesage to socket that user is leaving chat room
-        // TODO Do the updating of the tab window in the UI
+        // Send mesage to socket that user is leaving chat room
+        console.log("leaving " + room);
+
+        socket.emit("leave", {
+          username: username,
+          room: room
+        });
+
+        // Do the updating of the tab window in the UI
+        const convoContainer = document.querySelector("#chat-convos");
+        const tellUserMsg = document.createElement("p");
+
+        // Clear out existing chat convos
+        while (convoContainer.firstChild) {
+          convoContainer.removeChild(convoContainer.firstChild);
+        }
+
+        tellUserMsg.textContent = "Join a channel to start chatting.";
+
+        convoContainer.appendChild(tellUserMsg);
+
+        clickedEl.textContent = "Join";
+        clickedEl.classList.remove("btn-warning");
+        clickedEl.classList.add("btn-primary");
+
+        localStorage.setItem("joined", "");
+
       }
 
     }
