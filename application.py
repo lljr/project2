@@ -164,10 +164,17 @@ def handle_message(data):
 @socketio.on('leave')
 @authenticated_only
 def on_leave(data):
+    """User leaves chat room."""
     username = data['username']
     room = data['room']
     leave_room(room)
-    send(username + ' has left the room.', room=room)
+
+    # Tell everyone
+    send({
+        "type": "message",
+        "message": f"{username} has left the room.",
+        "room": room
+    }, room=room, json=True)
 
 
 if __name__ == '__main__':
