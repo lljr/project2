@@ -19,7 +19,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const ul = document.querySelector("#livechannels > ul");
     // https://davidwalsh.name/event-delegate
-    ul.addEventListener("click", e => joinRoom(e));
+    ul.addEventListener("click", e => joinOrLeaveRoom(e));
   });
 
   socket.on('disconnect', () =>{
@@ -185,12 +185,12 @@ document.addEventListener('DOMContentLoaded', () => {
     return `[${date.getHours()}:${date.getMinutes()}] ${message}`;
   }
 
-  function joinRoom(event) {
+  function joinOrLeaveRoom(event) {
+
     const clickedEl = event.target;
 
-    if (clickedEl.nodeName === "LI") {
-      // TODO switchChatView()
-    } else if (clickedEl.nodeName === "BUTTON") {
+    // Allow user to only join _1_ room=
+    if (clickedEl.nodeName === "BUTTON") {
       const li = clickedEl.parentNode;
       const room = li.dataset.channel;
 
