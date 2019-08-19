@@ -4,14 +4,14 @@
 
 
   <div class="row py-2 align-items-center">
-    <h2 class="mr-auto">Hi, {{session.get("username")}}</h2>
+    <h2 class="mr-auto">Hi, {{session.get("username")}}!</h2>
     <div class="col-sm-6">
       <form id="channelform">
-        <div class="row">
+        <div class="row no-gutters">
           <div class="col">
             <input id="channelname" class="form-control" placeholder="Channel name" type="text">
           </div>
-          <div class="col">
+          <div class="col mx-2">
             <button type="submit" class="btn btn-dark">Create</button>
           </div>
         </div>
