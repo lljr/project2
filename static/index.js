@@ -47,7 +47,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
       if (!data.channels.length) {
         var alertUser = document.createElement("p");
-        alertUser.textContent = "No channels available at this moment.";
+        alertUser.textContent = "No channels available to chat at this moment.";
         alertUser.setAttribute("class", 'font-italic py-3');
         channelsList.parentNode.appendChild(alertUser);
       } else if (channelsList.parentNode.querySelector("p")) {
