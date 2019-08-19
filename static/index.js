@@ -236,7 +236,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!ul.parentNode.getAttribute("class"))
       ul.parentNode.setAttribute("class", "card");
 
-    ul.append(li);
+    ul.appendChild(li);
   }
 
   function clearOutListData(ul) {
