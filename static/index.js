@@ -89,6 +89,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const convoContainer = document.querySelector("#chat-convos");
 
+    // Clear out existing chat convos
+    while (convoContainer.firstChild) {
+      convoContainer.removeChild(convoContainer.firstChild);
+    }
     // Show room
     const chatRoomRow = document.createElement("div");
     chatRoomRow.setAttribute("class", "row message-board no-gutters");
