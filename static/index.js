@@ -77,6 +77,9 @@ document.addEventListener('DOMContentLoaded', () => {
       li.style.color = "Gray";
       room.appendChild(li);
     }
+    // NOTE The problem with this flow right now is that when a user sends a message it gets
+    // immediately inserted in to the user's conversation board regardless of any error that may
+    // have occured in the server -- giving false positives (no conversation board updated) to the other users.
     else if (data.sender !== localStorage.getItem("username")) {
       const date = new Date(data.date)
       li.textContent = addTimestamp(addSender(data.message, data.sender),
