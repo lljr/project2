@@ -49,25 +49,31 @@ document.addEventListener('DOMContentLoaded', () => {
                      data.username);
       break;
     case "message":
-      inserNewMsg(data);
+      insertNewMsg(data);
       break;
     case "join":
       setUpChatRoom(data.room);
-
-      // Fetch messages and populate into chat room
-      const roomMsgList = document.querySelector(`#${data.room}-msglist`);
-      data.messages.forEach(message => {
-        const li = document.createElement("li");
-        date = new Date(message.date);
-        li.textContent = addTimestamp(addSender(message.content, message.sender), date);
-        roomMsgList.appendChild(li);
-      });
+      updateRoomWithFetchedMsgs(data.room, data.messages);
+      break;
+    case "refresh":
+      setUpChatRoom(data.room);
+      updateRoomWithFetchedMsgs(data.room, data.messages);
       break;
     }
-
   });
 
-  function inserNewMsg(data) {
+  function updateRoomWithFetchedMsgs(room, messages) {
+    // Fetch messages and populate into chat room
+    const roomMsgList = document.querySelector(`#${room}-msglist`);
+    messages.forEach(message => {
+      const li = document.createElement("li");
+      date = new Date(message.date);
+      li.textContent = addTimestamp(addSender(message.content, message.sender), date);
+      roomMsgList.appendChild(li);
+    });
+  }
+
+  function insertNewMsg(data) {
     const room = document.querySelector(`#${data.room}-msglist`);
     const li = document.createElement("li");
 
@@ -285,9 +291,29 @@ document.addEventListener('DOMContentLoaded', () => {
       localStorage.setItem("username", username);
     }
 
-    // Should always populate channels list
+    // Page should always populate channels list
     clearOutListData(ul);
     channels.forEach(channel => updateChannelsList(channel, ul));
+
+
+    console.log("I would be printing that there are no joined convos")
+    const convoContainer = document.querySelector("#chat-convos");
+    if (!localStorage.getItem("joined")) {
+      // Do the updating of the tab window in the UI
+      const tellUserMsg = document.createElement("p");
+
+      console.log("no joined convos");
+
+      tellUserMsg.textContent = "Join a channel to start chatting.";
+      convoContainer.appendChild(tellUserMsg);
+    }
+
+    console.log("I should be refetching previous board")
+    socket.emit('refresh', {
+      username: localStorage.getItem("username"),
+      room: localStorage.getItem("joined"),
+    })
+
   }
 
   function updateChannelsList(channelName, ul) {
