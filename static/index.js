@@ -42,7 +42,19 @@ document.addEventListener('DOMContentLoaded', () => {
 
     switch(data.type) {
     case "sync":
-      syncWithServer(document.querySelector("#livechannels > ul"),
+      // Check if there are active channels first
+      const channelsList = document.querySelector("#livechannels > ul");
+
+      if (!data.channels.length) {
+        var alertUser = document.createElement("p");
+        alertUser.textContent = "No channels available at this moment.";
+        alertUser.setAttribute("class", 'font-italic py-3');
+        channelsList.parentNode.appendChild(alertUser);
+      } else if (channelsList.parentNode.querySelector("p")) {
+        channelsList.parentNode.removeChild(alertUser);
+      }
+
+      syncWithServer(channelsList,
                      data.channels,
                      data.username);
       break;
