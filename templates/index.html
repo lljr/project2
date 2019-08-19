@@ -2,8 +2,9 @@
 {% block title %}Chat{% endblock %}
 {% block main %}
 
-  <h2 class="pb-2"></h2>
-  <div class="row justify-content-center">
+
+  <div class="row py-2 align-items-center">
+    <h2 class="mr-auto">Hi, {{session.get("username")}}</h2>
     <div class="col-sm-6">
       <form id="channelform">
         <div class="row">
@@ -19,10 +20,12 @@
     </div>
   </div>
 
-  <div class="row pt-3 justify-content-center make-height-window-size-convo">
+  <!-- NOTE Remember that the row div use to have .make-height-window-size-convo -->
+  <div class="row">
+
     <!-- Updated Online Channels -->
     <div class="col-3">
-      <h2 class="pb-2">Live Channels</h2>
+      <h3>Live Channels</h3>
       <div id="livechannels">
         <ul class="list-group list-group-flush">
         </ul>
@@ -30,7 +33,8 @@
     </div>
 
 
-    <!-- General container for convesations boards -->
+    <!-- Current messages/conversation displayed here  -->
     <div id="chat-convos" class="col"></div>
+
   </div>
 {% endblock %}
