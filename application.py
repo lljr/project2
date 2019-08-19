@@ -107,14 +107,14 @@ def on_join(data):
     join_room(room)
 
     current_messages = list(db["channels"][room]["messages"])
-    # 1. First let the user join
+    #  Let the user join
     send({
         "type": "join",
         "room": room,
         "messages": current_messages
     }, json=True)
 
-    # 2. Then tell everyone
+    # Tell everyone
     send({
         "type": "message",
         "message": f"{username} has entered the room.",
