@@ -308,25 +308,20 @@ document.addEventListener('DOMContentLoaded', () => {
     clearOutListData(ul);
     channels.forEach(channel => updateChannelsList(channel, ul));
 
-
-    console.log("I would be printing that there are no joined convos")
     const convoContainer = document.querySelector("#chat-convos");
     if (!localStorage.getItem("joined")) {
       // Do the updating of the tab window in the UI
       const tellUserMsg = document.createElement("p");
-
-      console.log("no joined convos");
-
+      console.log("I would be printing that there are no joined convos")
       tellUserMsg.textContent = "Join a channel to start chatting.";
       convoContainer.appendChild(tellUserMsg);
     }
 
-    console.log("I should be refetching previous board")
+    console.log("I should be always refetch previous board")
     socket.emit('refresh', {
       username: localStorage.getItem("username"),
       room: localStorage.getItem("joined"),
-    })
-
+    });
   }
 
   function updateChannelsList(channelName, ul) {
