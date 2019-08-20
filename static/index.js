@@ -20,6 +20,20 @@ document.addEventListener('DOMContentLoaded', () => {
     const ul = document.querySelector("#livechannels > ul");
     // https://davidwalsh.name/event-delegate
     ul.addEventListener("click", e => joinOrLeaveRoom(e));
+
+    const logout = document.querySelector("#logout");
+    function clearAll() {
+      var oReq = new XMLHttpRequest();
+      oReq.addEventListener("load", function() {
+        const jsonRes = JSON.parse(this.responseText);
+        window.location.href = `${jsonRes.address}`;
+        localStorage.clear();
+      });
+      oReq.open("GET", "/leave");
+      oReq.send(null);
+    }
+    logout.addEventListener("click",  clearAll);
+
   });
 
   socket.on('disconnect', () =>{
