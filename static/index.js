@@ -23,7 +23,6 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   socket.on('disconnect', () =>{
-    console.log("disconnected!")
     // localStorage.clear(); This makes no sense...
   });
 
