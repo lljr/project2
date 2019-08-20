@@ -1,10 +1,10 @@
 document.addEventListener('DOMContentLoaded', () => {
+  // Connect to socket
   const socket = io.connect(location.protocol + '//' + document.domain + ':' + location.port);
 
   // When connected, configure buttons
   socket.on('connect', () => {
 
-    console.log("connected!")
     const createChannel = document.querySelector("#channelform");
     createChannel.addEventListener("submit", event => {
 
