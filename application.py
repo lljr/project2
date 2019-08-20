@@ -127,14 +127,18 @@ def on_join(data):
 @socketio.on("refresh")
 @authenticated_only
 def handle_refresh(data):
-    """User closes window and fetches convo messages again."""
+    """User fetches convo messages again."""
     room = data['room']
-    current_messages = list(db["channels"][room]["messages"])
-    send({
-        "type": "refresh",
-        "room": room,
-        "messages": list(current_messages)
-    }, json=True)
+
+    if room is not None:
+        current_messages = list(db["channels"][room]["messages"])
+        send({
+            "type": "refresh",
+            "room": room,
+            "messages": current_messages
+        }, json=True)
+
+
 
 
 @socketio.on('message')
