@@ -137,6 +137,8 @@ def handle_refresh(data):
             "messages": current_messages
         }, json=True)
 
+    return "ok"
+
 
 
 
@@ -178,6 +180,8 @@ def on_leave(data):
         "message": f"{username} has left the room.",
         "room": room
     }, room=room, json=True)
+
+    return "ok"
 
 
 if __name__ == '__main__':
