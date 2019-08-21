@@ -3,5 +3,13 @@
 {% block title %}Error{% endblock %}
 
 {% block main %}
-  <p>Something went wrong....</p>
+  <div class="row">
+    <div class="col">
+      <h2>Something went wrong...</h2>
+      <h3>{{message}}</h3>
+      <h4>{{error}}</h4>
+      <a href="{{url_for(link|string)}}">Go back</a>
+    </div>
+  </div>
+
 {% endblock %}
