@@ -9,7 +9,7 @@ from flask import Flask, render_template, request, session, jsonify, redirect,\
 
 from flask_socketio import SocketIO, emit, join_room, leave_room, send
 
-from helpers import login_required, authenticated_only
+from helpers import login_required, authenticated_only, check_unallowed_chars
 
 app = Flask(__name__)
 app.config["SECRET_KEY"] = os.getenv("SECRET_KEY")
