@@ -172,6 +172,18 @@ document.addEventListener('DOMContentLoaded', () => {
     chatRoom.appendChild(parentList);
     chatRoom.appendChild(sendMsgForm);
 
+    // By default, submit button is disabled
+    sendMsgForm.disabled = true;
+    sendMsgButton.disabled = true;
+
+    // Enable button only if there is text in the input field
+    msgInput.addEventListener("keyup", () => {
+      if (msgInput.value.length > 0)
+        sendMsgButton.disabled = false;
+      else
+        sendMsgButton.disabled = true;
+    });
+
     // Send typed messages to server
     sendMsgForm.addEventListener("submit", event => handleMsgSending(event) );
   }
@@ -180,6 +192,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const msgList = e.currentTarget.parentNode.querySelector("ul");
     const input = e.currentTarget.querySelector("input");
+    const btn = e.currentTarget.querySelector("button");
 
     const msg = document.createElement("li");
 
@@ -200,6 +213,7 @@ document.addEventListener('DOMContentLoaded', () => {
       console.log("ok");
     });
 
+    btn.disabled = true;
     e.currentTarget.reset();
     e.preventDefault();
   }
