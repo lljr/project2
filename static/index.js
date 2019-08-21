@@ -145,10 +145,11 @@ document.addEventListener('DOMContentLoaded', () => {
     // Create form structure
     const sendMsgForm = document.createElement("form");
     const inputGroup = document.createElement("div");
-    inputGroup.setAttribute("class", "input-group mb-3");
+    inputGroup.setAttribute("class", "input-group");
 
     const inputGroupBtnWrapper = document.createElement("div");
     inputGroupBtnWrapper.setAttribute("class", "input-group-append");
+
 
     // Where messages will be typed
     const msgInput = document.createElement("input");
