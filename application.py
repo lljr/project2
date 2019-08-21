@@ -74,6 +74,7 @@ def logout():
 @authenticated_only
 def handle_connect():
     """Set up user log in."""
+
     send({
         "type": "sync",
         "channels": list(db.get("channels")),
