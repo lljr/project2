@@ -88,14 +88,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function insertNewMsg(data) {
     const room = document.querySelector(`#${data.room}-msglist`);
-    const li = document.createElement("li");
+    const msg = document.createElement("li");
 
     // Msg built by server
     if (!data.sender) {
       if (localStorage.getItem("joined") === data.room) {
-        li.textContent = data.message;
-        li.style.color = "Gray";
-        room.appendChild(li);
+        msg.textContent = data.message;
+        msg.style.color = "Gray";
+        room.appendChild(msg);
+
+        msg.scrollIntoView();
 
       }
     }
@@ -106,9 +108,11 @@ document.addEventListener('DOMContentLoaded', () => {
     // TODO When a user sends a message, give feedback and allow user to resend msg
     else if (data.sender !== localStorage.getItem("username")) {
       const date = new Date(data.date)
-      li.textContent = addTimestamp(addSender(data.message, data.sender),
+      msg.textContent = addTimestamp(addSender(data.message, data.sender),
                                     date);
-      room.appendChild(li);
+      room.appendChild(msg);
+
+      msg.scrollIntoView();
     }
   }
 
