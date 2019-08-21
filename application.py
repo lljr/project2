@@ -141,8 +141,6 @@ def handle_refresh(data):
     return "ok"
 
 
-
-
 @socketio.on('message')
 @authenticated_only
 def handle_message(data):
