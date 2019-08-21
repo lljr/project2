@@ -33,7 +33,6 @@ document.addEventListener('DOMContentLoaded', () => {
       oReq.send(null);
     }
     logout.addEventListener("click",  clearAll);
-
   });
 
   socket.on('disconnect', () =>{
