@@ -69,9 +69,12 @@ def handle_channel(data):
     """User attempts to create a channel."""
 
     channel = data['channel']
-    # Notify user when sending empty form data
-    # Note to self: when sending data with JS `FromData' object, the key gets
-    # assigned an empty string as its value when submitting an empty form
+
+    has_punctuation = check_unallowed_chars(channel, string.punctuation)
+    has_whitespace = check_unallowed_chars(channel, string.whitespace)
+    has_digits = check_unallowed_chars(channel, string.digits)
+
+    # User sends empty value when submitting an empty form
     if not channel:
         emit('channel created?', {
             'message': "You sent an empty form",
@@ -82,6 +85,12 @@ def handle_channel(data):
         emit('channel created?', {
             "message": "Channel already exists.",
             'channel': ""
+        })
+    elif has_digits or has_punctuation or has_whitespace:
+        emit('channel created?', {
+            "message": f"Cannot create channel that contains '{string.whitespace}'or \
+            '{string.punctuation}' or '{string.digits}'",
+            "channel": ""
         })
     else:
         db["channels"].update({
