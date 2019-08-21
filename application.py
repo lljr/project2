@@ -91,7 +91,7 @@ def handle_channel(data):
         })
 
         emit('channel created?', {
-            "message": "Channel created.",
+            "message": "New channel created.",
             'channel': channel
         },
              broadcast=True)
