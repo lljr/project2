@@ -49,10 +49,7 @@ document.addEventListener('DOMContentLoaded', () => {
                          document.querySelector("#livechannels > ul"));
   });
 
-  socket.on("message", data => {console.log(data)});
-
   socket.on("json", data => {
-
     switch(data.type) {
     case "sync":
       // Check if there are active channels first
