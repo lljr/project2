@@ -211,12 +211,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function addTimestamp(message, date) {
     // Adds time of creation to message
-    return `[${date.getHours()}:${date.getMinutes()}] ${message}`;
+    const formattedMinutes = (parseInt(date.getMinutes()) <= 9? "0" + date.getMinutes() : date.getMinutes());
+    const formattedHours = (parseInt(date.getHours()) <= 9? "0" + date.getHours() : date.getHours());
+    return `[${formattedHours}:${formattedMinutes}] ${message}`;
   }
 
   function joinOrLeaveRoom(event) {
-    /* Allow user to join only _1_ room at a time */
 
+    /* Allow user to join only _1_ room at a time */
     const clickedEl = event.target;
     if (clickedEl.nodeName === "BUTTON") {
       const li = clickedEl.parentNode;
