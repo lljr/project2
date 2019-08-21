@@ -3,7 +3,7 @@
   :CUSTOM_ID: project-2-flack
   :END:
 
-** Milestones [5/7]
+** Milestones [6/7]
    :PROPERTIES:
    :CUSTOM_ID: milestones
    :END:
@@ -13,7 +13,7 @@
 - [X] Channel List
 - [X] Complete the Messages View
 - [X] Sending Messages
-- [ ] Complete the Remembering the Channel
+- [X] Complete the Remembering the Channel
 - [ ] Personal Touch
 
 ** Requirements
