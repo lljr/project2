@@ -65,8 +65,13 @@ def adduser():
 @app.route("/leave")
 def logout():
     """Leave chat."""
-    # users_db.remove(session.get("username"))
-    session.clear()
+
+    try:
+        # Remove user from DB
+        db["users"].remove(session.get("username"))
+        session.clear()
+    except KeyError:
+        return render_template("error.html", message="Dev error.", link='adduser', error=400)
     return jsonify({"address": "/adduser"})
 
 
