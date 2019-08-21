@@ -105,6 +105,17 @@ $(".nav .nav-link").on("click", function(){
    - maybe using a event listener that checks if the form is complete?
    - maybe sending data to server to a global variable
 * README
+** Getting Started
+
+** =application.py=
+** =helpers.py=
+** =static/index.js=
+** =static/main.scss=
+** HTML Templates
+*** =error.html=
+*** =index.html=
+*** =adduser.html=
+** Personal Touch
 * Dev Notes
 
 ** Running Flask in dev environment with WebSocket
