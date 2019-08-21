@@ -71,10 +71,10 @@
    :PROPERTIES:
    :CUSTOM_ID: how-to-submit
    :END:
-
-1. Using [[https://git-scm.com/downloads][Git]], push your work to =https://github.com/submit50/USERNAME.git=, where =USERNAME= is your
+   EDIT: push your work to https://github.com/me50/USERNAME.git, where USERNAME is your GitHub username, on a branch called web50/projects/2019/x/2
+1. Using [[https://git-scm.com/downloads][Git]], +push your work to =https://github.com/submit50/USERNAME.git=, where =USERNAME= is your
    GitHub username, on a branch called =cs50/web/2018/x/projects/2= or, if you've installed
-   [[https://cs50.readthedocs.io/submit50/][=submit50=]],
+   [[https://cs50.readthedocs.io/submit50/][=submit50=]],+
 
 2. [[https://www.howtogeek.com/205742/how-to-record-your-windows-mac-linux-android-or-ios-screen/][Record a 1- to 5-minute screencast]] in which you demonstrate your app's functionality and/or walk
    viewers through your code.  [[https://www.youtube.com/upload][Upload that video to YouTube]] (as unlisted or public, but not private)
