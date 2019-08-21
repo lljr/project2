@@ -159,7 +159,6 @@ document.addEventListener('DOMContentLoaded', () => {
     msgInput.setAttribute("aria-label", "Sender's message");
     msgInput.setAttribute("aria-describedby", "basic-addon2");
 
-
     const sendMsgButton = document.createElement("button");
     sendMsgButton.textContent = "Send";
     sendMsgButton.setAttribute("class", "input-group-text btn btn-secondary");
