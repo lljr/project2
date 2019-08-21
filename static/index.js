@@ -120,7 +120,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Show room
     const chatRoomRow = document.createElement("div");
-    chatRoomRow.setAttribute("class", "row message-board no-gutters");
+    chatRoomRow.setAttribute("class", "row message-board no-gutters p-3 rounded");
 
     const chatRoom = document.createElement("div");
     chatRoom.setAttribute("class", "col");
