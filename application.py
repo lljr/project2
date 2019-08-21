@@ -31,15 +31,33 @@ def index():
 @app.route("/adduser", methods=["GET", "POST"])
 def adduser():
     """Log user in."""
+
     if request.method == "POST":
-        # Don't allow user to submit empty forms
+        session.clear()
+
         username = request.form.get("username")
+        # Don't allow user to submit empty forms
         if not username:
-            return jsonify({})
-        elif username not in db.get("users"):
+            msg = "You sent an empty form. Try again."
+            return render_template(
+                "error.html",
+                message=msg,
+                error=400,
+                link="adduser"
+            )
+
+        if username not in db.get("users"):
             session["username"] = username
             db["users"].add(username)
             return redirect(url_for("index"))
+        else:
+            msg = "Username already in use. Choose another."
+            return render_template(
+                "error.html",
+                message=msg,
+                error=400,
+                link="adduser"
+            )
     else:
         return render_template("adduser.html")
 
