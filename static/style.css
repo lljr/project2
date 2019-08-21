@@ -9,6 +9,10 @@
 /* .make-height-window-size-convo { */
 /*     height: 85vh; */
 /* } */
+.message-board {
+  background-color: #fff8e6;
+}
+
 .message-board ul {
   height: 70vh;
   overflow-y: auto;
