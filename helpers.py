@@ -20,3 +20,12 @@ def login_required(f):
             return redirect(url_for('adduser'))
         return f(*args, **kwargs)
     return decorated_function
+
+
+def check_unallowed_chars(sent_input, unallowed):
+    """Checks for a series of unallowed chars in a string."""
+
+    for char in unallowed:
+        if char in sent_input:
+            return True
+    return False
