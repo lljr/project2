@@ -4,27 +4,27 @@
 
 
   <div class="row py-2 align-items-center">
-    <h2 class="mr-auto">Hi, {{session.get("username")}}!</h2>
-    <div class="col-sm-6">
-      <form id="channelform">
+    <div class="col-4">
+      <form id="channelform" class="form-inline">
         <div class="row no-gutters">
           <div class="col">
-            <input id="channelname" class="form-control" placeholder="Channel name" type="text">
+            <input required id="channelname" class="form-control" placeholder="Type a name" type="text">
           </div>
-          <div class="col mx-2">
+          <div class="col ml-2">
             <button type="submit" class="btn btn-dark">Create</button>
           </div>
         </div>
       </form>
       <small id="message" class="form-text text-muted"></small>
     </div>
+    <h2 class="ml-auto pr-3">Hi, {{session.get("username")}}!</h2>
   </div>
 
   <!-- NOTE Remember that the row div use to have .make-height-window-size-convo -->
-  <div class="row">
+  <div class="row align-items-center">
 
     <!-- Updated Online Channels -->
-    <div class="col-3">
+    <div class="col-3 align-self-start">
       <h3 class="text-center">Live Channels</h3>
       <div id="livechannels">
         <ul class="list-group list-group-flush">
