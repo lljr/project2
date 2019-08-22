@@ -76,10 +76,42 @@ document.addEventListener('DOMContentLoaded', () => {
     const roomMsgList = document.querySelector(`#${room}-msglist`);
     messages.forEach(message => {
       const li = document.createElement("li");
-      date = new Date(message.date);
-      li.textContent = addTimestamp(addSender(message.content, message.sender), date);
+      li.id = message.id;
+      li.textContent = addTimestamp(addSender(message.content, message.sender), message.date);
       roomMsgList.appendChild(li);
+
+      if (message.sender === localStorage.getItem("username")) {
+        const btn = createBootstrapCloseIcon();
+        btn.addEventListener("click", deleteMessage);
+        li.appendChild(btn);
+      }
     });
+  }
+
+  function deleteMessage() {
+
+    socket.emit("delete message", {
+      "sender": localStorage.getItem("username"),
+      "room": localStorage.getItem("joined"),
+      "id": this.parentNode.id     // li --> this.parentNode
+    });
+    console.log("deleting msg")
+
+  }
+
+  function createBootstrapCloseIcon() {
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "close ml-auto";
+    btn.setAttribute("aria-label", "Close");
+
+    const span = document.createElement("span");
+    span.setAttribute("aria-hidden", "true")
+    span.innerHTML = "&times;";
+
+    btn.appendChild(span);
+
+    return btn;
   }
 
   function insertNewMsg(data) {
