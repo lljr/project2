@@ -60,13 +60,13 @@ document.addEventListener('DOMContentLoaded', () => {
   socket.on("json", data => {
     switch(data.type) {
     case "sync":
-      // Check if there are active channels first
       const channelsList = document.querySelector("#livechannels > ul");
       syncWithServer(channelsList,
                      data.channels,
                      data.username);
       break;
     case "message":
+      // Inserts new messages as well broadcasts when user leaves/joins room
       insertNewMsg(data);
       break;
     case "join":
