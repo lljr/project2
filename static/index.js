@@ -130,27 +130,24 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Msg built by server
     if (!data.sender) {
-      if (localStorage.getItem("joined") === data.room) {
         msg.textContent = data.message;
         msg.style.color = "Gray";
         room.appendChild(msg);
-
         msg.scrollIntoView();
-
-      }
-    }
-    // NOTE The problem with this flow right now is that when a user sends a message it gets
-    // immediately inserted in to the user's conversation board regardless of any error that may
-    // have occured in the server -- giving false positives (no conversation board updated) to the other users.
-
-    // TODO When a user sends a message, give feedback and allow user to resend msg
-    else if (data.sender !== localStorage.getItem("username")) {
-      const date = new Date(data.date)
+    } else {
+// FIXME
+// TODO      msg.id =  "ok";
+//      console.log("data is  " + JSON.stringify(data) )
       msg.textContent = addTimestamp(addSender(data.message, data.sender),
-                                    date);
+                                     data.date);
       room.appendChild(msg);
-
       msg.scrollIntoView();
+
+      // if (message.sender === localStorage.getItem("username")) {
+      //   const btn = createBootstrapCloseIcon();
+      //   btn.addEventListener("click", deleteMessage);
+      //   msg.appendChild(btn);
+      // }
     }
   }
 
