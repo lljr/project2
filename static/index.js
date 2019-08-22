@@ -229,31 +229,29 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function handleMsgSending(e) {
 
+    // TODO Refactor using `this`
     const msgList = e.currentTarget.parentNode.querySelector("ul");
     const input = e.currentTarget.querySelector("input");
     const btn = e.currentTarget.querySelector("button");
 
     const msg = document.createElement("li");
 
-    const rightNow = new Date();
     const username = localStorage.getItem("username");
-
-    msg.textContent = addTimestamp(addSender(input.value, username), rightNow);
-    msgList.appendChild(msg);
-
-    msg.scrollIntoView();
 
     socket.send({
       "room": msgList.dataset.room,
       "username": username,
       "message": input.value
     }, ok => {
-      // TODO If not ok ask to resend message
-      console.log("ok");
+      if (ok === "ok") {
+        btn.disabled = true;
+        input.value = '';
+        console.log("message delivered.")
+      } else {
+        alert("Could not deliver message. Try again.");
+      }
     });
 
-    btn.disabled = true;
-    e.currentTarget.reset();
     e.preventDefault();
   }
 
