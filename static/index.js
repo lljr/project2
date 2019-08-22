@@ -18,25 +18,34 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     const ul = document.querySelector("#livechannels > ul");
-    // https://davidwalsh.name/event-delegate
+
     ul.addEventListener("click", e => joinOrLeaveRoom(e));
 
     const logout = document.querySelector("#logout");
+    logout.addEventListener("click",  clearAll);
+
     function clearAll() {
       var oReq = new XMLHttpRequest();
       oReq.addEventListener("load", function() {
         const jsonRes = JSON.parse(this.responseText);
-        window.location.href = `${jsonRes.address}`;
+        window.location.href = `${jsonRes.address}`; // redirect back to login form
+        if (localStorage.getItem("joined")) {
+          socket.emit("leave", {
+            "username": localStorage.getItem("username"),
+            "room": localStorage.getItem("joined")
+          });
+          localStorage.clear();
+        }
         localStorage.clear();
       });
       oReq.open("GET", "/leave");
       oReq.send(null);
     }
-    logout.addEventListener("click",  clearAll);
+
   });
 
   socket.on('disconnect', () =>{
-    // localStorage.clear(); This makes no sense...
+    console.log("disconnected from chat.")
   });
 
   socket.on('channel created?', data => {
