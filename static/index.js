@@ -171,7 +171,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Each room gets a title
     const title = document.createElement("h4");
     title.textContent = room;
-    title.setAttribute("class", "mb-auto border-bottom");
+    title.setAttribute("class", "mb-auto border-bottom text-center pb-2");
     chatRoom.appendChild(title);
 
     // Creates a list of messages
