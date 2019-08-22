@@ -74,6 +74,7 @@ document.addEventListener('DOMContentLoaded', () => {
       updateRoomWithFetchedMsgs(data.room, data.messages);
       break;
     case "refresh":
+      // Similar to 'join' but does not broadcast msg to chat that user joined
       setUpChatRoom(data.room);
       updateRoomWithFetchedMsgs(data.room, data.messages);
       break;
