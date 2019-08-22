@@ -327,12 +327,14 @@ document.addEventListener('DOMContentLoaded', () => {
       const joinedRoom = localStorage.getItem("joined");
       socket.emit('refresh', {
         username: localStorage.getItem("username"),
-        room: localStorage.getItem("joined"),
+        room: joinedRoom,
       }, ok => {
         const allOK = ok === "ok";
         if (allOK) {
           const btn = document.querySelector(`#channel-item-${joinedRoom} button`);
           toggleChannel(btn, "Leave", "primary", "warning");
+        } else {
+          console.log("An Error occured when trying to leave room.")
         }
       });
     }
