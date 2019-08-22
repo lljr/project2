@@ -407,8 +407,9 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function noChannelsJoinedMsg(elementToUpdate) {
-    const tellUserMsg = document.createElement("p");
-    tellUserMsg.textContent = "Join a channel to start chatting.";
+    const tellUserMsg = document.createElement("h4");
+    tellUserMsg.textContent = "Join a channel to chat.";
+    tellUserMsg.className = "text-center my-auto";
     elementToUpdate.appendChild(tellUserMsg);
   }
 
