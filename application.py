@@ -162,8 +162,11 @@ def on_join(data):
 @authenticated_only
 def handle_refresh(data):
     """User fetches convo messages again."""
+
     room = data['room']
 
+    # When user first logins their localStorage will have an empty variable for room
+    # where the room is stored, don't do anything if there is not a room defined
     if room is not None:
         current_messages = list(db["channels"][room]["messages"])
         send({
