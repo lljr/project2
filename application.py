@@ -181,26 +181,52 @@ def handle_refresh(data):
 @socketio.on('message')
 @authenticated_only
 def handle_message(data):
-    """Send messages to rooms."""
+    """Sends messages to rooms and saves them in database."""
 
-    date = datetime.now(timezone.utc)
     room = db["channels"].get(data["room"])
+
+    # TODO Refactor repeated code in sent dict data
+    msg_id, date = str(uuid4()), str(datetime.now(timezone.utc))
     room["messages"].append({
+        "id": msg_id,
         "sender": data["username"],
         "content": data["message"],
-        "date": str(date)
+        "date": date
     })
 
     send({
         "type": "message",
+        "id": msg_id,
         "sender": data["username"],
         "room": data['room'],
         "message": data["message"],
-        "date": str(date)
+        "date": date
     }, room=data["room"], json=True)
 
     return "ok"
 
+@socketio.on("delete message")
+@authenticated_only
+def handle_delete(data):
+    """Deletes a message in a conversation."""
+    room = data["room"]
+    msg_id = data["id"]
+
+    # TODO "Delete" msg in database
+    current_messages = db["channels"][room]["messages"]
+    for i in range(len(current_messages)):
+        msg = current_messages[i]
+
+        print(f"before: {current_messages[i]}")
+        if msg["id"]== msg_id: # TODO It should be message.id
+            msg["sender"] = "???"
+            msg["content"] = "Message deleted."
+            msg["date"] = "???"
+
+        print(f"after: {current_messages[i]}")
+
+
+    send({"type": "deletion", "id": msg_id}, json=True)
 
 @socketio.on('leave')
 @authenticated_only
