@@ -104,18 +104,18 @@ $(".nav .nav-link").on("click", function(){
 3. conditinally load menu items like "Join Channels" if the username gets filled
    - maybe using a event listener that checks if the form is complete?
    - maybe sending data to server to a global variable
-* README
-** Getting Started
-
+* TODO README
+** TODO Getting Started
 ** =application.py=
 ** =helpers.py=
 ** =static/index.js=
 ** =static/main.scss=
 ** HTML Templates
+*** =layout.html=
 *** =error.html=
 *** =index.html=
 *** =adduser.html=
-** Personal Touch
+** TODO Personal Touch
 * Dev Notes
 
 ** Running Flask in dev environment with WebSocket
