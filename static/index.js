@@ -72,6 +72,7 @@ document.addEventListener('DOMContentLoaded', () => {
       insertNotification(data.room, data.message)
       break;
     case "join":
+      console.log("am i joining")
       setUpChatRoom(data.room);
       updateRoomWithFetchedMsgs(data.room, data.messages);
       break;
