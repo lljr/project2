@@ -67,7 +67,6 @@ document.addEventListener('DOMContentLoaded', () => {
       break;
     case "message":
       const msg = document.createElement("li");
-      console.log("new msg");
       insertNew(msg, {
         id: data.id,
         content: data.message,
@@ -80,8 +79,6 @@ document.addEventListener('DOMContentLoaded', () => {
       insertNotification(data.room, data.message)
       break;
     case "join":
-      console.log("am i joining")
-      console.log(data.room)
       setUpChatRoom(data.room);
       fetchPreviousMsgs(data.room,  data.messages);
       break;
@@ -143,7 +140,6 @@ document.addEventListener('DOMContentLoaded', () => {
       "room": localStorage.getItem("joined"),
       "id": this.parentNode.id     // li --> this.parentNode
     });
-    console.log("deleting msg");
   }
 
   function createBootstrapCloseIcon() {
