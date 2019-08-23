@@ -66,8 +66,10 @@ document.addEventListener('DOMContentLoaded', () => {
                      data.username);
       break;
     case "message":
-      // Inserts new messages as well broadcasts when user leaves/joins room
-      insertNewMsg(data);
+      insertNewMsg(data.id, data.message, data.sender, data.date,data.room);
+      break;
+    case "notification":
+      insertNotification(data.room, data.message)
       break;
     case "join":
       setUpChatRoom(data.room);
@@ -124,31 +126,30 @@ document.addEventListener('DOMContentLoaded', () => {
     return btn;
   }
 
-  function insertNewMsg(data) {
-    const room = document.querySelector(`#${data.room}-msglist`);
+  function insertNewMsg(id, message, sender, date, room) {
+
     const msg = document.createElement("li");
+    msg.id = id;
+    msg.textContent = addTimestamp(addSender(message, sender), date);
 
-    // Msg built by server
-    if (!data.sender) {
-        msg.textContent = data.message;
-        msg.style.color = "Gray";
-        room.appendChild(msg);
-        msg.scrollIntoView();
-    } else {
-// FIXME
-// TODO      msg.id =  "ok";
-//      console.log("data is  " + JSON.stringify(data) )
-      msg.textContent = addTimestamp(addSender(data.message, data.sender),
-                                     data.date);
-      room.appendChild(msg);
-      msg.scrollIntoView();
+    document.querySelector(`#${room}-msglist`).appendChild(msg);
 
-      // if (message.sender === localStorage.getItem("username")) {
-      //   const btn = createBootstrapCloseIcon();
-      //   btn.addEventListener("click", deleteMessage);
-      //   msg.appendChild(btn);
-      // }
+    msg.scrollIntoView();
+
+    if (sender === localStorage.getItem("username")) {
+      // TODO Refactor button object creation with 'new'
+      const btn = createBootstrapCloseIcon(); // I know there is a way to do this with 'new' ...
+      btn.addEventListener("click", deleteMessage);
+      msg.appendChild(btn);
     }
+  }
+
+  function insertNotification(room, message) {
+    const msg = document.createElement("li");
+    msg.textContent = message;
+    msg.style.color = "Gray";
+    document.querySelector(`#${room}-msglist`).appendChild(msg);
+    msg.scrollIntoView();
   }
 
   function setUpChatRoom(room) {

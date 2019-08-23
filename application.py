@@ -146,7 +146,7 @@ def on_join(data):
 
     # Tell everyone
     send({
-        "type": "message",
+        "type": "notification",
         "message": f"{username} has entered the room.",
         "room": room
     }, room=room, json=True)
