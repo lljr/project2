@@ -205,24 +205,33 @@ def handle_message(data):
 @authenticated_only
 def handle_delete(data):
     """Deletes a message in a conversation."""
+
+    # "Delete" msg in database
     room = data["room"]
     msg_id = data["id"]
-
-    # TODO "Delete" msg in database
     current_messages = db["channels"][room]["messages"]
+
     for i in range(len(current_messages)):
         msg = current_messages[i]
 
-        print(f"before: {current_messages[i]}")
-        if msg["id"]== msg_id: # TODO It should be message.id
+        if msg["id"]== msg_id:
+            print(f"before: {current_messages[i]}")
             msg["sender"] = "???"
             msg["content"] = "Message deleted."
             msg["date"] = "???"
 
-        print(f"after: {current_messages[i]}")
+            payload = dict(
+                type="deletion",
+                id=msg_id,
+                sender=msg["sender"],
+                content=msg["content"],
+                date=msg["date"]
+            )
 
+            send(payload, room=room, json=True)
+            print(f"after: {current_messages[i]}")
+            return "deleted"
 
-    send({"type": "deletion", "id": msg_id}, json=True)
 
 @socketio.on('leave')
 @authenticated_only
