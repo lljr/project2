@@ -241,7 +241,7 @@ def on_leave(data):
 
     # Tell everyone
     send({
-        "type": "message",
+        "type": "notification",
         "message": f"{username} has left the room.",
         "room": room
     }, room=room, json=True)
