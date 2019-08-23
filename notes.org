@@ -55,7 +55,7 @@
  - I've thought of implementing this with a single localStorage item
    called `chatting' set equal to room that was last chatted on.
 
-*** TODO *Personal Touch*: Add at least one additional feature to your chat
+*** DONE *Personal Touch*: Add at least one additional feature to your chat
  application of your choosing! Feel free to be creative, but if you're
  looking for ideas, possibilities include: supporting deleting one's
  own messages, supporting use attachments (file uploads) as messages,
