@@ -80,6 +80,11 @@ document.addEventListener('DOMContentLoaded', () => {
       setUpChatRoom(data.room);
       updateRoomWithFetchedMsgs(data.room, data.messages);
       break;
+    case "deletion":
+      console.log(data);
+
+      handleDeleteMessage(data.id, data.sender, data.content, data.date);
+      break;
     }
   });
 
@@ -96,8 +101,23 @@ document.addEventListener('DOMContentLoaded', () => {
         const btn = createBootstrapCloseIcon();
         btn.addEventListener("click", deleteMessage);
         li.appendChild(btn);
+
+        if (message.sender === "???") {
+          console.log("unknown author");
+          li.className = "font-italic";
+          li.appendChild(btn);
+        }
+
       }
+
     });
+  }
+
+  function handleDeleteMessage(id, sender, content, date) {
+    const msg = document.querySelector(`#${id}`);
+
+    msg.textContent = addTimestamp(addSender(content, sender), date);
+    msg.className = "font-italic";
   }
 
   function deleteMessage() {
@@ -107,8 +127,7 @@ document.addEventListener('DOMContentLoaded', () => {
       "room": localStorage.getItem("joined"),
       "id": this.parentNode.id     // li --> this.parentNode
     });
-    console.log("deleting msg")
-
+    console.log("deleting msg");
   }
 
   function createBootstrapCloseIcon() {
