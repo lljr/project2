@@ -244,18 +244,19 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // Send typed messages to server
-    sendMsgForm.addEventListener("submit", event => handleMsgSending(event) );
+    sendMsgForm.addEventListener("submit", function (event) {
+      handleMsgSending(event)
+    });
   }
 
   function handleMsgSending(e) {
-
+    e.preventDefault();
     // TODO Refactor using `this`
     const msgList = e.currentTarget.parentNode.querySelector("ul");
     const input = e.currentTarget.querySelector("input");
     const btn = e.currentTarget.querySelector("button");
 
     const msg = document.createElement("li");
-
     const username = localStorage.getItem("username");
 
     socket.send({
