@@ -66,59 +66,74 @@ document.addEventListener('DOMContentLoaded', () => {
                      data.username);
       break;
     case "message":
-      insertNewMsg(data.id, data.message, data.sender, data.date,data.room);
+      const msg = document.createElement("li");
+      console.log("new msg");
+      insertNew(msg, {
+        id: data.id,
+        content: data.message,
+        sender: data.sender,
+        date: data.date,
+      }, data.room);
+      msg.scrollIntoView(); // MAYBE FIXME
       break;
     case "notification":
       insertNotification(data.room, data.message)
       break;
     case "join":
       console.log("am i joining")
+      console.log(data.room)
       setUpChatRoom(data.room);
-      updateRoomWithFetchedMsgs(data.room, data.messages);
+      fetchPreviousMsgs(data.room,  data.messages);
       break;
     case "refresh":
-      // Similar to 'join' but does not broadcast msg to chat that user joined
-      setUpChatRoom(data.room);
-      updateRoomWithFetchedMsgs(data.room, data.messages);
+      // Similar to 'join' but does not trigger msg broadcast in room
+      const current = localStorage.getItem("joined");
+      setUpChatRoom(current);
+      fetchPreviousMsgs(current, data.messages);
       break;
     case "deletion":
-      console.log(data);
-
       handleDeleteMessage(data.id, data.sender, data.content, data.date);
       break;
     }
   });
 
-  function updateRoomWithFetchedMsgs(room, messages) {
+  function insertNew(newMsg, msg, roomJoined) {
+
+    newMsg.id = msg.id;
+    newMsg.textContent = addTimestamp(addSender(msg.content, msg.sender), msg.date);
+
+    // Add message to conversation board
+    document.querySelector(`#${roomJoined}-msglist`).appendChild(newMsg);
+
+    newMsg.className = (msg.sender === "???")? "font-italic text-muted" : "font-bold";
+
+    // Add a delete button if the sender and user logged in are the same
+    if (msg.sender === localStorage.getItem("username")) {
+      // TODO Refactor button object creation with 'new'
+      const btn = createBootstrapCloseIcon(); // I know there is a way to do this with 'new' ...
+      btn.addEventListener("click", deleteMessage);
+      newMsg.appendChild(btn);
+    }
+  }
+
+  function fetchPreviousMsgs(room, messages) {
     // Fetch messages and populate into chat room
-    const roomMsgList = document.querySelector(`#${room}-msglist`);
     messages.forEach(message => {
-      const li = document.createElement("li");
-      li.id = message.id;
-      li.textContent = addTimestamp(addSender(message.content, message.sender), message.date);
-      roomMsgList.appendChild(li);
-
-      if (message.sender === localStorage.getItem("username")) {
-        const btn = createBootstrapCloseIcon();
-        btn.addEventListener("click", deleteMessage);
-        li.appendChild(btn);
-
-        if (message.sender === "???") {
-          console.log("unknown author");
-          li.className = "font-italic";
-          li.appendChild(btn);
-        }
-
-      }
+      const msg = document.createElement("li");
+      insertNew(msg, {
+        id: message.id,
+        content: message.content,
+        sender: message.sender,
+        date: message.date
+      }, room);
 
     });
   }
 
   function handleDeleteMessage(id, sender, content, date) {
     const msg = document.querySelector(`#${id}`);
-
     msg.textContent = addTimestamp(addSender(content, sender), date);
-    msg.className = "font-italic";
+    msg.className = "font-italic text-muted";
   }
 
   function deleteMessage() {
@@ -144,24 +159,6 @@ document.addEventListener('DOMContentLoaded', () => {
     btn.appendChild(span);
 
     return btn;
-  }
-
-  function insertNewMsg(id, message, sender, date, room) {
-
-    const msg = document.createElement("li");
-    msg.id = id;
-    msg.textContent = addTimestamp(addSender(message, sender), date);
-
-    document.querySelector(`#${room}-msglist`).appendChild(msg);
-
-    msg.scrollIntoView();
-
-    if (sender === localStorage.getItem("username")) {
-      // TODO Refactor button object creation with 'new'
-      const btn = createBootstrapCloseIcon(); // I know there is a way to do this with 'new' ...
-      btn.addEventListener("click", deleteMessage);
-      msg.appendChild(btn);
-    }
   }
 
   function insertNotification(room, message) {
@@ -265,16 +262,17 @@ document.addEventListener('DOMContentLoaded', () => {
       "username": username,
       "message": input.value
     }, ok => {
-      if (ok === "ok") {
-        btn.disabled = true;
-        input.value = '';
-        console.log("message delivered.")
-      } else {
-        alert("Could not deliver message. Try again.");
-      }
+      // TODO Add notification for status of sent msg
+      //  This would be good as an extra feature (Peronsal Touch)
+      // if (ok === "ok") {
+      //  btn.disabled = true;
+      //  input.value = '';
+      // } else {
+      //   alert("Could not deliver message. Try again.");
+      // }
     });
-
-    e.preventDefault();
+    e.currentTarget.reset();
+    btn.disabled = true;
   }
 
   function addSender(message, username) {
