@@ -67,12 +67,8 @@ def adduser():
 def logout():
     """Leave chat."""
 
-    try:
-        # Remove user from DB
-        db["users"].remove(session.get("username"))
-        session.clear()
-    except KeyError:
-        return render_template("error.html", message="Dev error.", link='adduser', error=400)
+    # db["users"].remove(session.get("username"))
+    session.clear()
     return jsonify({"address": "/adduser"})
 
 
