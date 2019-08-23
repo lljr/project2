@@ -215,7 +215,6 @@ def handle_delete(data):
         msg = current_messages[i]
 
         if msg["id"]== msg_id:
-            print(f"before: {current_messages[i]}")
             msg["sender"] = "???"
             msg["content"] = "Message deleted."
             msg["date"] = "???"
@@ -229,7 +228,6 @@ def handle_delete(data):
             )
 
             send(payload, room=room, json=True)
-            print(f"after: {current_messages[i]}")
             return "deleted"
 
 
