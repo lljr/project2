@@ -164,6 +164,7 @@ def handle_refresh(data):
     # When user first logins their localStorage will have an empty variable for room
     # where the room is stored, don't do anything if there is not a room defined
     if room is not None:
+        join_room(room) # If this is not done then user will see convo but wont be able to send msg
         current_messages = list(db["channels"][room]["messages"])
         send({
             "type": "refresh",
