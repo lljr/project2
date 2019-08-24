@@ -104,18 +104,154 @@ $(".nav .nav-link").on("click", function(){
 3. conditinally load menu items like "Join Channels" if the username gets filled
    - maybe using a event listener that checks if the form is complete?
    - maybe sending data to server to a global variable
-* TODO README
-** TODO Getting Started
+* README
+** Getting Started
+*** Prepare the virtual environment
+**** Set environment variables
+either by typing on your terminal (=$ FLASK_APP=application.py; SECRET_KEY="secret"=)
+
+or by placing them inside a file (i.e. =.env=)
+#+BEGIN_SRC shell
+  # these go inside a .env file or such
+  export FLASK_APP=application.py
+  export SECRET_KEY='Your_secret!!!'
+#+END_SRC
+and sourcing it (i.e. =. .env= or =source .env=)
+
+**** Run the virtual environment
+by first setting it with =$ python -m venv venv= and then running it with
+=$ source venv/bin/activate=
+
+**** Install dependencies
+first check that the virtual environment is active then run =$ pip install -r requirements.txt=
+
+**** Start the server
+with =$python application.py= since development sever does work with FlaskSocketIO (i.e =$ flask run=)
+
+**** Go to 127.0.0.1
+then type a name which will be your moniker to identify you in the chat
 ** =application.py=
+handles login/logout flow with http requests and then leaves everything else to websockets.
+
+The nature of this flow is documented in the FlaskSocketIO documentation and the author actually
+encourages this for simplicity's sake. You'll only see =/leave=, =/= and =/adduser= as http routes.
+** Session vs localStorage
+One thing to not about =/leave= is that it does not remove the user from the database -- that is
+due to the nature of this chat app in which assumes a user will chat quickly and then leave. I did
+not want to let another user claim the same username and then be misidentified because it may not
+be the same person.
+
+Another thing is that the route will accept and AJAX request because it will take care of clearing
+=localStorage= and sending a last 'leave' event to let members of a room chat now that the user
+logged out AND thus implicitly left any current chats.
+
+Furthermore, on login (i.e. =/adduser=) the server will save the user's username in a session
+cookie and later on in =localStorage=. This is done because the client needs a way to redraw
+the screen when it closes a window. The session cookie can only remember server side but cannot
+handle in any way what the client does. Therefore, =localStorage= helps by redrawing the screens
+and fetching the channels, _which are live and current_, to the client when it reopens a window.
+
+*** Channel creation
+ Besides that channel creation, deletion, and sending of messages happen with websockets.
+ They may seem like a lot but I built them in a way that I could give proper feedback to user:
+ that a user should know if a channel can be created or not (and why).
+
+ The server (that is this same file) only stores up to 100 messages: you'll see something in line
+ =177= like
+ #+BEGIN_SRC python
+           db["channels"].update({
+               channel: {
+                   "messages": collections.deque(maxlen=100)
+               }
+           })
+
+ #+END_SRC
+
+ that is specifically the statement =collections.deque(maxlen=100)=.
+
+
+
+*** Handling timestamps
+All messages are saved with a timestamp, created at the server. They are later converted to 24 hour
+format (European?) when they are received by the client (the browser). The Date API kind of automagically does the conversion to human readable format since I'm feeding a raw UTF string that represents time. For example
+#+BEGIN_SRC javascript
+    const now = new Date(date);
+#+END_SRC
+
+Where the variable =date= is a string sent from the Flask server in UTF format.
+
+That is
+#+BEGIN_SRC python
+  msg_id, date = "item-" + str(uuid4().hex), str(datetime.now(timezone.utc))
+#+END_SRC
+
+Since browser vendors (Chrome, FireFox, Safari etc) implement the Date API differently, please expect different results. For example, in Safari, you will notice that the timestamp on the message won't be something like =[10:22]=, but something like =[...]=. I should further investigate the reason why this happens but I suspect it may have to do with cross browser compatibility, which is outside of the scope of the project (i.e. making my client code compatible in many other browsers.). So, please test the app in Firefox.
+
 ** =helpers.py=
+Contains two decorators which prevent interaction with the server unless the user is authenticated.
+
+There is also a small helper function that loops through a variable to find a desired character.
+This is used to error check/sanitize input during channel creation (requests sent via websocket to
+created a channel).
+
 ** =static/index.js=
+Handles all render logic. The way the file is written expresses more or less my train of thought...
+There are several functions that need work and polishing. Also, I did not use much callbacks in
+websocket statements like
+#+BEGIN_SRC javascript
+  socket.emit('join', {
+  // ...
+  }, ok => {
+    // This is a callback
+  })
+#+END_SRC
+
+which would have been nice to provide other features like whether messages where read or whether
+they actually got sent by the server and allowing resending them on network errors etc etc.
+
+
+*** TODO I should talk about why page does not need reloading
+
+*** TODO I should talk about closing the window and going back without needing to login
+
+*** TODO talk about the switch case that handles most logic
 ** =static/main.scss=
+Mostly helps formatting the conversation window where messages get displayed by giving it a fixed
+height. Handles other minor styling. Btw, most styling was done using bootstrap 4.
 ** HTML Templates
 *** =layout.html=
+The app barely renders other pages besides =index.html=. This page contains the navigation menu
+and a main container where most data gets rendered.
 *** =error.html=
+A simple web page that aids giving feedback when a user sents incorrent data to authenticate.
 *** =index.html=
+Main page that uses two main columns: the first one to display active channels and the other one to
+display the current active room/conversation/channel (whatever you want to call it).
+
+You don't need to refresh this page to receive messages or deleted messages notifications.
+
 *** =adduser.html=
-** TODO Personal Touch
+Page that tells a user to identify themselves. Has only one input, meaning it only requires a username.
+** Personal Touch
+*** "Deleting" messages
+A user will see an "x" button beside their message indicating that they may request to delete it.
+
+I'm not really deleting their messages because I would not rather created gaps in a conversation.
+
+I think it would make a conversation confusing... Instead, I decided to overwrited them because
+I would like a user to know what happened in the conversation if they decided to close the window
+and come back again where they left off.
+
+I do not implement strict confirmation because I think it would be annoying to ask the user for
+a pop-up confirmation to delete their message and I think that the app's chat rooms have a very
+short lifespans, so a user should be able to delete them as quickly as possible.
+
+** Notes
+*** Tested on Firefox Quantum and Firefox Developer Edition
+*** Bugs
+**** Tested on Safari but won't show dates
+renders dates as =[...]= perhaps the way =new Date()= works in Safari differs from
+Firefox's implementation
 * Dev Notes
 
 ** Running Flask in dev environment with WebSocket
