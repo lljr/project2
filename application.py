@@ -182,7 +182,7 @@ def handle_message(data):
     room = db["channels"].get(data["room"])
 
     # TODO Refactor repeated code in sent dict data
-    msg_id, date = "item-" + str(uuid4().hex), str(datetime.now(timezone.utc))
+    msg_id, date = "item-" + str(uuid4().hex), str(datetime.now(timezone.utc).isoformat(sep='T'))
     room["messages"].append({
         "id": msg_id,
         "sender": data["username"],
