@@ -71,39 +71,85 @@
    :PROPERTIES:
    :CUSTOM_ID: how-to-submit
    :END:
-   EDIT: push your work to https://github.com/me50/USERNAME.git, where USERNAME is your GitHub username, on a branch called web50/projects/2019/x/2
-1. Using [[https://git-scm.com/downloads][Git]], +push your work to =https://github.com/submit50/USERNAME.git=, where =USERNAME= is your
-   GitHub username, on a branch called =cs50/web/2018/x/projects/2= or, if you've installed
-   [[https://cs50.readthedocs.io/submit50/][=submit50=]],+
+1. EDIT: push your work to https://github.com/me50/USERNAME.git, where USERNAME is your GitHub username, on a branch called web50/projects/2019/x/2
 
 2. [[https://www.howtogeek.com/205742/how-to-record-your-windows-mac-linux-android-or-ios-screen/][Record a 1- to 5-minute screencast]] in which you demonstrate your app's functionality and/or walk
    viewers through your code.  [[https://www.youtube.com/upload][Upload that video to YouTube]] (as unlisted or public, but not private)
    or somewhere else.
 
 3. [[https://forms.cs50.io/35643afd-5a3b-4482-bcec-ddbc61af297f][Submit this form]].
+* Dev Notes
 
+** Running Flask in dev environment with WebSocket
+Many errors occur like "Websocket not available". Case discussed
+in this [[https://github.com/miguelgrinberg/Flask-SocketIO/issues/647][Github issue]].
+
+*soln*: =pip install gevent=, allows using =python application.py= with no erorrs.
+
+ =flask run= does not work with Websocket cause of package author decision.
+
+To run in debug mode, add this at end of =application.py=
+#+BEGIN_SRC python
+if __name__ == '__main__':
+    socketio.run(app, debug=True, host="0.0.0.0")
+#+END_SRC
+
+although =host= is optinal
+
+** getAttribute() vs .value
+.value gets input value in real time
+
+one is implementation dependent (different browsers) other is standard
+
+detailed explanation [[https://stackoverflow.com/questions/11973678/difference-between-element-value-and-element-getattributevalue][here]]
+
+** Bugs
+
+*** index.js [3/3]
+
+ - [X] =updateLiveChannelsList= invocation re-inserts list items when newer
+item becomes available in the server-side
+
+- [X] before login, several tags are not defined, maybe seperate each function by loading it
+by its corresponding view
+
+- [X] the "create channel" form allows entering empty fields
+
+**** FIX clear out existing table data
+by removing all firstChild of =ul= element
+*** index.html
+
+**** DONE cannot persist fetching of channels
+     - Note taken on [2019-07-02 mar 10:45] \\
+       at first I thought this may be solved with localStorage
+
+       but then I realized that I need to fetch the updated liv echannels
+
+       after successful insertion as well as after loading the page.
+realted to updateLivechannelsList: won't persist channels list even
+though variable in database server does persist
 
 ** Plannning
 
 *** Bootstrap changing active navbar menu item
-I had some issues with changing the navbar active item in the previous project.
-According to this [[https://stackoverflow.com/questions/24514717/bootstrap-navbar-active-state-not-working?rq=1][SO]] post, you need to manage it yourself. (Bootstrap 4)
+ I had some issues with changing the navbar active item in the previous project.
+ According to this [[https://stackoverflow.com/questions/24514717/bootstrap-navbar-active-state-not-working?rq=1][SO]] post, you need to manage it yourself. (Bootstrap 4)
 
-#+BEGIN_SRC javascript
-$(".nav .nav-link").on("click", function(){
-   $(".nav").find(".active").removeClass("active");
-   $(this).addClass("active");
-});
-#+END_SRC
+ #+BEGIN_SRC javascript
+ $(".nav .nav-link").on("click", function(){
+    $(".nav").find(".active").removeClass("active");
+    $(this).addClass("active");
+ });
+ #+END_SRC
 
 *** Channel Creation ideas
-1. test submitting different usernames to 127.0.0.1 and 0.0.0.0
-2. check if the usernames are different
-   - with a dictionary at the server that remembers all users
-   - with localStorage that remembers the logged in user
-3. conditinally load menu items like "Join Channels" if the username gets filled
-   - maybe using a event listener that checks if the form is complete?
-   - maybe sending data to server to a global variable
+ 1. test submitting different usernames to 127.0.0.1 and 0.0.0.0
+ 2. check if the usernames are different
+    - with a dictionary at the server that remembers all users
+    - with localStorage that remembers the logged in user
+ 3. conditinally load menu items like "Join Channels" if the username gets filled
+    - maybe using a event listener that checks if the form is complete?
+    - maybe sending data to server to a global variable
 * README
 ** Getting Started
 *** Run the virtual environment
@@ -289,71 +335,22 @@ A user will see an "x" button beside their message indicating that they may requ
 
 I'm not really deleting their messages because I would rather not create gaps in a conversation.
 
-Instead, I decided to overwrite them because I would like users to know what happened in the conversation, they decide
-to close the window and come back again wherever left off.
+Instead, I decided to overwrite them because I would like users to know what happened in the
+conversation -- they decide to close the window and come back again wherever left off.
 
-I do not implement strict confirmation because it would be annoying to ask the user for
-a pop-up confirmation to delete their own message.
+I do not implement strict "delete message" confirmation because it would be annoying to ask the user
+for a pop-up confirmation to delete their own message.
 
-The app's chat rooms have a short lifespans -- a user should be able to delete them as quickly as possible.
+The app's chat rooms have a short lifespans -- a user should be able to delete them as quickly as
+possible.
 
 ** Notes
 *** Bugs
 Known bugs that require further investigation
-**** Tested on Safari but won't show dates
+*** DONE Tested on Safari but won't show dates
 renders dates as =[...]= perhaps the way =new Date()= works in Safari differs from
 Firefox's implementation
 ***** [[https://stackoverflow.com/questions/5802461/javascript-which-browsers-support-parsing-of-iso-8601-date-string-with-date-par?noredirect=1&lq=1][support parsing of ISO-8601 Date String]]
 ***** [[https://stackoverflow.com/questions/15109894/new-date-works-differently-in-chrome-and-firefox][Date API Chrome vs Firefox]]
 ***** [[https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/parse#Syntax][Date.parse implicitly calls new Date()]]
 ***** [[https://docs.python.org/3.7/library/datetime.html#datetime.datetime.isoformat][python datetime.isoformat(sep='T', timespec='minutes') to manipulate ISO 8601 string]]
-* Dev Notes
-
-** Running Flask in dev environment with WebSocket
-Many errors occur like "Websocket not available". Case discussed
-in this [[https://github.com/miguelgrinberg/Flask-SocketIO/issues/647][Github issue]].
-
-*soln*: =pip install gevent=, allows using =python application.py= with no erorrs.
-
- =flask run= does not work with Websocket cause of package author decision.
-
-To run in debug mode, add this at end of =application.py=
-#+BEGIN_SRC python
-if __name__ == '__main__':
-    socketio.run(app, debug=True, host="0.0.0.0")
-#+END_SRC
-
-although =host= is optinal
-
-** getAttribute() vs .value
-.value gets input value in real time
-
-one is implementation dependent (different browsers) other is standard
-
-detailed explanation [[https://stackoverflow.com/questions/11973678/difference-between-element-value-and-element-getattributevalue][here]]
-
-** Bugs
-
-*** index.js [3/3]
-
- - [X] =updateLiveChannelsList= invocation re-inserts list items when newer
-item becomes available in the server-side
-
-- [X] before login, several tags are not defined, maybe seperate each function by loading it
-by its corresponding view
-
-- [X] the "create channel" form allows entering empty fields
-
-**** FIX clear out existing table data
-by removing all firstChild of =ul= element
-*** index.html
-
-**** DONE cannot persist fetching of channels
-     - Note taken on [2019-07-02 mar 10:45] \\
-       at first I thought this may be solved with localStorage
-
-       but then I realized that I need to fetch the updated liv echannels
-
-       after successful insertion as well as after loading the page.
-realted to updateLivechannelsList: won't persist channels list even
-though variable in database server does persist
