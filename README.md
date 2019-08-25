@@ -49,11 +49,11 @@ by first setting it with `$ python -m venv venv` and then running it with
 either by typing on your terminal (`$ FLASK_APP=application.py; SECRET_KEY`"secret"=)
 
 or by placing them inside a file (i.e. `.env`)
-
+```sh
     # these go inside a .env file or such
     export FLASK_APP=application.py
     export SECRET_KEY='Your_secret!!!'
-
+```
 and sourcing it (i.e. `. .env` or `source .env`)
 
 
@@ -145,13 +145,13 @@ channel can be created or not (and why).
 
 The server (that is file `application.py`) only stores up to 100 messages: you'll see
 in line  `177`
-
+```python
     db["channels"].update({
         channel: {
             "messages": collections.deque(maxlen=100)
         }
     })
-
+```
 specifically the statement `collections.deque(maxlen=100)`, which automagically pops
  message items when there are more than 100.
 
@@ -164,15 +164,15 @@ All messages are saved with a timestamp, created at the server in ISO 8601 forma
 They are later converted to 24 hour UTC format by the client (browser).
 The Date API kind of automagically does the conversion to human readable local time
 format by feeding a raw UTC created by Python's `datetime` module. For example
-
+```javascript
     const now = new Date(date);
-
+```
 Where the variable `date` is a string sent from the Flask server in UTC format.
 
 That is from what gets output in `date`
-
+```python
     msg_id, date = "item-" + str(uuid4().hex), str(datetime.now(timezone.utc).isoformat(sep='T')
-
+```
 Since browser vendors (Chrome, FireFox, Safari etc) implement the Date API differently, please
 expect results to vary from browser to browser. +For example, in Safari, you will notice that the
 timestamp on the message won't be something like `[10:22]`, but something like `[...]`. I should
@@ -206,13 +206,13 @@ create a channel).
 Handles all render logic. The way the file is written expresses more or less my train of thought&#x2026;
 There are several functions that need work and polishing. Also, I did not use much callbacks in
 websocket statements like
-
+```javascript
     socket.emit('join', {
     // ...
     }, ok => {
       // This is a callback
     })
-
+```
 which would have been nice to provide other features like whether messages were read, or whether
 they actually got sent by the server, or allowing resending them on network errors etc etc.
 
