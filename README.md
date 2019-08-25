@@ -174,10 +174,10 @@ That is from what gets output in `date`
     msg_id, date = "item-" + str(uuid4().hex), str(datetime.now(timezone.utc).isoformat(sep='T')
 ```
 Since browser vendors (Chrome, FireFox, Safari etc) implement the Date API differently, please
-expect results to vary from browser to browser. +For example, in Safari, you will notice that the
+expect results to vary from browser to browser. ~~For example, in Safari, you will notice that the
 timestamp on the message won't be something like `[10:22]`, but something like `[...]`. I should
 further investigate the reason this happens, but I suspect it may have to do with cross browser
-compatibility, which is outside of the scope of the project.+
+compatibility, which is outside of the scope of the project.~~
 
 **NOTE**: I have fixed this issue on the last commit. The reason is that the Python `datetime` module creates
 by default a string without the *T* seperator in `YYYY-MM-DDTHH:mm:ss.sssZ` ISO 8601. This is done
