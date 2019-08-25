@@ -3,7 +3,7 @@
   :CUSTOM_ID: project-2-flack
   :END:
 
-** Milestones [7/7]
+** DONE Milestones [7/7]
    :PROPERTIES:
    :CUSTOM_ID: milestones
    :END:
@@ -16,7 +16,7 @@
 - [X] Complete the Remembering the Channel
 - [X] Personal Touch
 
-** Requirements
+** DONE Requirements
    :PROPERTIES:
    :CUSTOM_ID: requirements
    :END:
@@ -61,7 +61,7 @@
  own messages, supporting use attachments (file uploads) as messages,
  or supporting private messaging between two users.
 
-*** TODO In =README.md=, include a short writeup describing your project,
+*** DONE In =README.md=, include a short writeup describing your project,
  what's contained in each file, and (optionally) any other additional
  information the staff should know about your project. Also, include a
  description of your personal touch and what you chose to add to the
