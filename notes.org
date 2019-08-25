@@ -127,7 +127,7 @@ first check that the virtual environment is active then run =$ pip install -r re
 *** Start the server
 with =$python application.py= since development sever does work with FlaskSocketIO (i.e =$ flask run=)
 
-*** Go to =127.0.0.1:5000=
+*** Go to =127.0.0.1:5000/=
 in your browser then type a name which will be your moniker to identify you in the chat
 
 **** Preferably test using Firefox
@@ -137,27 +137,38 @@ I believe Chrome should work; I quickly tested using a seperate machine that run
 timestamp creation. So... keep that in mind
 
 ** =application.py=
-handles login/logout flow with http requests and then leaves everything else to websockets.
+handles login/logout flow via http requests and leaves everything else to websockets.
 
 The nature of this flow is documented in the [[https://flask-socketio.readthedocs.io/en/latest/][FlaskSocketIO documentation]], and the author actually
 encourages this one for simplicity's sake. You'll only see =/leave=, =/= and =/adduser= as http routes.
 
 *** Session vs localStorage
- One thing to not about the =/leave= route is that it does not remove the user from the database -- that is
+ One thing to note about the =/leave= route is that it does not remove the user from the database -- that is
  due to the nature of this chat app that assumes a user will chat quickly and then leave. Therefore, their
  name would become available to any other user, allowing a different person to claim the past username's messages.
  By not erasing the user from the database during logout, I'm preventing their username and their respective
  chat messages to be claimed by another person.
 
- Another thing is that the route accepts AJAX requests because it will take care of clearing
- =localStorage= and sending a last 'leave' event to let members of a room chat know that the user
- logged out, which implicitly signals the user left a room chat.
+ I have thought a lot about this decision and decided to leave it that way. Since most likely this app will run
+ as a development server, I do not see another reason to change this design decision. I would consider removing
+ the user on the databse were I to deploy the app in a production server.
 
- Furthermore, on login (i.e. =/adduser=) the server will save the user's username in a session
+ Another thing is that the =/leave= route accepts AJAX requests because it will take care of clearing
+ =localStorage= and sending a last /leave/ event to let members of a room chat know that a user
+ logged out. You will get a Python /KeyError/ if the development server crashes and you try to use the app
+ again. Remember that a server crash signals a /disconnect/ event to the client, which triggers a  websocket
+ /leave/ event but does not clear the session cookie. Naturally, a user will be logged in will send
+ empty data to retreive channels, throwing a /KeyError/ when trying to access the channels Python dictionary
+ with an undefined variable.
+
+ Furthermore, on login (i.e. =/adduser=), the server will save the user's username in a session
  cookie and later on in =localStorage=  because the client needs a way to redraw
- the screen when it closes a window. The session cookie can only remember on the server side but cannot
- interact in any way with the client via websockets. =localStorage= stores a "username" and "joined" variable
+ the screen when it closes a window. =localStorage= stores a "username" and "joined" variable
  to help redraw the screen and fetch the channels, _which are live and current_, to the client when it reopens a window.
+ The variables stored in =localStorage= help rendering correct data in a coversation when the client receives messages
+ from the server. Things like making sure the owner of a message sees an *X* on their message and not on another person's
+ message are handling by checking variables stored in =localStorage= (=username= & =joined=).
+
  The ="joined"= variable gets used heavily in the client side to toggle several CSS styles as to give feedback to the
  user about their currently joined chat room, if there is any, or the current live and available chats in the
  "Live Channels" section.
@@ -184,10 +195,10 @@ channel creation, deletion, and sending of messages happen with websockets.
    message items when there are more than 100.
 
 *** Handling timestamps
- All messages are saved with a timestamp, created at the server. They are later converted to 24 hour
- UTC format  when they are received by the client (the browser). The Date API kind of
- automagically does the conversion to human readable local time format since I'm feeding a raw UTC
- created by Python. For example
+ All messages are saved with a timestamp, created at the server in ISO 8601 format.
+ They are later converted to 24 hour UTC format by the client (browser).
+ The Date API kind of automagically does the conversion to human readable local time
+ format by feeding a raw UTC created by Python's =datetime= module. For example
  #+BEGIN_SRC javascript
      const now = new Date(date);
  #+END_SRC
@@ -196,16 +207,22 @@ channel creation, deletion, and sending of messages happen with websockets.
 
  That is from what gets output in =date=
  #+BEGIN_SRC python
-   msg_id, date = "item-" + str(uuid4().hex), str(datetime.now(timezone.utc))
+   msg_id, date = "item-" + str(uuid4().hex), str(datetime.now(timezone.utc).isoformat(sep='T')
  #+END_SRC
 
  Since browser vendors (Chrome, FireFox, Safari etc) implement the Date API differently, please
- expect results to vary from browser to browser. For example, in Safari, you will notice that the
+ expect results to vary from browser to browser. +For example, in Safari, you will notice that the
  timestamp on the message won't be something like =[10:22]=, but something like =[...]=. I should
  further investigate the reason this happens, but I suspect it may have to do with cross browser
- compatibility, which is outside of the scope of the project.
+ compatibility, which is outside of the scope of the project.+
 
- Please test the app in Firefox.
+ *NOTE*: I have fixed this issue on the last commit. The reason is that the Python =datetime= module creates
+ by default a string without the /T/ seperator in =YYYY-MM-DDTHH:mm:ss.sssZ= ISO 8601. This is done
+ by calling the function =isoformat(sep='T')= on the created date object. I'm under the impression that
+ some browser vendors are very strict with the Date API implementation and will not return a proper date
+ without the exact same ISO 8601 format. For now, you can see dates rendered correctly in test.
+
+  That said, please the app in Firefox, since it's where I mostly tested the app.
 
 ** =helpers.py=
 Contains two decorators which prevent interaction with the server unless the user is authenticated.
