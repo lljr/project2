@@ -438,7 +438,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function setUpJoinChannelButton(button) {
     button.innerHTML = "Join";
-    button.setAttribute("class", "btn btn-primary ml-auto");
+    button.setAttribute("class", "btn btn-primary ml-md-auto ml-sm-1");
     button.setAttribute("type", "button");
   }
 
