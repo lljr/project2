@@ -46,7 +46,7 @@ by first setting it with `$ python -m venv venv` and then running it with
 
 ## Set environment variables
 
-either by typing on your terminal (`$ FLASK_APP=application.py; SECRET_KEY`"secret"=)
+either by typing on your terminal (`$ FLASK_APP=application.py; SECRET_KEY="secret"`)
 
 or by placing them inside a file (i.e. `.env`)
 ```sh
