@@ -239,7 +239,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Send typed messages to server
     sendMsgForm.addEventListener("submit", function (event) {
-      handleMsgSending(event)
+      handleMsgSending(event);
     });
   }
 
