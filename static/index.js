@@ -45,7 +45,7 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   socket.on('disconnect', () =>{
-    console.log("disconnected from chat.")
+    console.log("disconnected from chat.");
   });
 
   socket.on('channel created?', data => {
