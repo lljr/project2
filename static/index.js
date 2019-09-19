@@ -409,7 +409,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Create a 'join' button
     const joinButton = document.createElement("button");
-    setUpJoinChannelButton(joinButton)
+    setUpJoinChannelButton(joinButton);
 
     // Create list element that indicates the available chat room
     const li = document.createElement("li");
