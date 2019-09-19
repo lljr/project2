@@ -392,7 +392,7 @@ document.addEventListener('DOMContentLoaded', () => {
           const btn = document.querySelector(`#channel-item-${joinedRoom} button`);
           toggleChannel(btn, "Leave", "primary", "warning");
         } else {
-          console.log("An Error occured when trying to leave room.")
+          console.log("An Error occured when trying to leave room.");
         }
       });
     }
