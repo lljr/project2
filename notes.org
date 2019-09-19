@@ -340,3 +340,7 @@ by removing all firstChild of =ul= element
        after successful insertion as well as after loading the page.
 realted to updateLivechannelsList: won't persist channels list even
 though variable in database server does persist
+
+* TODOs
+
+** TODO Refactor poorly coded JS HTML templates with Handlebars
