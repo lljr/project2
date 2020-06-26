@@ -5,8 +5,8 @@ from uuid import uuid4
 
 from datetime import datetime, timezone
 
-from flask import Flask, render_template, request, session, jsonify, redirect,\
-    url_for
+from flask import (Flask, render_template, request, session, jsonify, redirect,
+                   url_for)
 
 from flask_socketio import SocketIO, emit, join_room, leave_room, send
 
@@ -16,10 +16,7 @@ app = Flask(__name__)
 app.config["SECRET_KEY"] = os.getenv("SECRET_KEY")
 socketio = SocketIO(app)
 
-db = {
-    "users": set(),
-    "channels": dict()
-}
+db = {"users": set(), "channels": dict()}
 
 
 @app.route("/")
@@ -32,7 +29,6 @@ def index():
 @app.route("/adduser", methods=["GET", "POST"])
 def adduser():
     """Log user in."""
-
     if request.method == "POST":
         session.clear()
 
@@ -40,12 +36,10 @@ def adduser():
         # Don't allow user to submit empty forms
         if not username:
             msg = "You sent an empty form. Try again."
-            return render_template(
-                "error.html",
-                message=msg,
-                error=400,
-                link="adduser"
-            )
+            return render_template("error.html",
+                                   message=msg,
+                                   error=400,
+                                   link="adduser")
 
         if username not in db.get("users"):
             session["username"] = username
@@ -53,12 +47,10 @@ def adduser():
             return redirect(url_for("index"))
         else:
             msg = "Username already in use. Choose another."
-            return render_template(
-                "error.html",
-                message=msg,
-                error=400,
-                link="adduser"
-            )
+            return render_template("error.html",
+                                   message=msg,
+                                   error=400,
+                                   link="adduser")
     else:
         return render_template("adduser.html")
 
@@ -66,7 +58,6 @@ def adduser():
 @app.route("/leave")
 def logout():
     """Leave chat."""
-
     # db["users"].remove(session.get("username"))
     session.clear()
     return jsonify({"address": "/adduser"})
@@ -77,11 +68,13 @@ def logout():
 def handle_connect():
     """Set up user log in."""
 
-    send({
-        "type": "sync",
-        "channels": list(db.get("channels")),
-        "username": session.get("username")
-    }, json=True)
+    send(
+        {
+            "type": "sync",
+            "channels": list(db.get("channels")),
+            "username": session.get("username")
+        },
+        json=True)
 
 
 @socketio.on('create channel')
@@ -108,17 +101,18 @@ def handle_channel(data):
             'channel': ""
         })
     elif has_digits or has_punctuation or has_whitespace:
-        emit('channel created?', {
-            "message": f"Cannot create channel that contains '{string.whitespace}'or \
+        emit(
+            'channel created?', {
+                "message":
+                f"Cannot create channel that contains '{string.whitespace}'or \
             '{string.punctuation}' or '{string.digits}'",
-            "channel": ""
-        })
+                "channel": ""
+            })
     else:
-        db["channels"].update({
-            channel: {
+        db["channels"].update(
+            {channel: {
                 "messages": collections.deque(maxlen=100)
-            }
-        })
+            }})
 
         emit('channel created?', {
             "message": "New channel created.",
@@ -142,14 +136,18 @@ def on_join(data):
         "type": "join",
         "room": room,
         "messages": current_messages
-    }, json=True)
+    },
+         json=True)
 
     # Tell everyone
-    send({
-        "type": "notification",
-        "message": f"{username} has entered the room.",
-        "room": room
-    }, room=room, json=True)
+    send(
+        {
+            "type": "notification",
+            "message": f"{username} has entered the room.",
+            "room": room
+        },
+        room=room,
+        json=True)
 
     return "ok"
 
@@ -158,19 +156,21 @@ def on_join(data):
 @authenticated_only
 def handle_refresh(data):
     """User fetches convo messages again."""
-
     room = data['room']
 
     # When user first logins their localStorage will have an empty variable for room
     # where the room is stored, don't do anything if there is not a room defined
     if room is not None:
-        join_room(room) # If this is not done then user will see convo but wont be able to send msg
+        join_room(
+            room
+        )  # If this is not done then user will see convo but wont be able to send msg
         current_messages = list(db["channels"][room]["messages"])
         send({
             "type": "refresh",
             "room": room,
             "messages": current_messages
-        }, json=True)
+        },
+             json=True)
 
     return "ok"
 
@@ -179,11 +179,11 @@ def handle_refresh(data):
 @authenticated_only
 def handle_message(data):
     """Sends messages to rooms and saves them in database."""
-
     room = db["channels"].get(data["room"])
 
     # TODO Refactor repeated code in sent dict data
-    msg_id, date = "item-" + str(uuid4().hex), str(datetime.now(timezone.utc).isoformat(sep='T'))
+    msg_id, date = "item-" + str(uuid4().hex), str(
+        datetime.now(timezone.utc).isoformat(sep='T'))
     room["messages"].append({
         "id": msg_id,
         "sender": data["username"],
@@ -191,16 +191,20 @@ def handle_message(data):
         "date": date
     })
 
-    send({
-        "type": "message",
-        "id": msg_id,
-        "sender": data["username"],
-        "room": data['room'],
-        "message": data["message"],
-        "date": date
-    }, room=data["room"], json=True)
+    send(
+        {
+            "type": "message",
+            "id": msg_id,
+            "sender": data["username"],
+            "room": data['room'],
+            "message": data["message"],
+            "date": date
+        },
+        room=data["room"],
+        json=True)
 
     return "ok"
+
 
 @socketio.on("delete message")
 @authenticated_only
@@ -215,18 +219,16 @@ def handle_delete(data):
     for i in range(len(current_messages)):
         msg = current_messages[i]
 
-        if msg["id"]== msg_id:
+        if msg["id"] == msg_id:
             msg["sender"] = "???"
             msg["content"] = "Message deleted."
             msg["date"] = "???"
 
-            payload = dict(
-                type="deletion",
-                id=msg_id,
-                sender=msg["sender"],
-                content=msg["content"],
-                date=msg["date"]
-            )
+            payload = dict(type="deletion",
+                           id=msg_id,
+                           sender=msg["sender"],
+                           content=msg["content"],
+                           date=msg["date"])
 
             send(payload, room=room, json=True)
             return "deleted"
@@ -241,11 +243,14 @@ def on_leave(data):
     leave_room(room)
 
     # Tell everyone
-    send({
-        "type": "notification",
-        "message": f"{username} has left the room.",
-        "room": room
-    }, room=room, json=True)
+    send(
+        {
+            "type": "notification",
+            "message": f"{username} has left the room.",
+            "room": room
+        },
+        room=room,
+        json=True)
 
     return "ok"
 
