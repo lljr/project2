@@ -38,20 +38,34 @@
 
 ## Run the virtual environment
 
-by first setting it with `$ python -m venv venv` and then running it with
+In the terminal, `$ python -m venv venv` later, activate with
 `$ source venv/bin/activate`
 
+or if [Virtualenvwrapper](https://virtualenvwrapper.readthedocs.io/en/latest/) is installed
+
+```sh
+$ mkvirtualenv project2
+```
+
+if it's the first time calling `mkvirtualenv`, then it should add the
+virtual environment automatically. If not, you can add it with
+
+```sh
+$ workon project2
+```
 
 <a id="org5d20a79"></a>
 
 ## Set environment variables
 
-either by typing on your terminal (`$ FLASK_APP=application.py; SECRET_KEY="secret"`)
+Check that the virtual environment is active.
 
-or by placing them inside a file (i.e. `.env`)
+Type on your terminal `$ FLASK_APP=application.py; SECRET_KEY="secret"`
+
+or place the environment variables inside a file (e.g. `.env`)
 
 ```sh
-    # these go inside a .env file or such
+    # inside an .env file
     export FLASK_APP=application.py
     export SECRET_KEY='Your_secret!!!'
 ```
@@ -62,24 +76,22 @@ and sourcing it (i.e. `. .env` or `source .env`)
 
 ## Install dependencies
 
-first check that the virtual environment is active then run `$ pip
-install -r requirements.txt`
+Again, check that the virtual environment is active.
+Run `$ pip install -r requirements.txt`
 
 
 <a id="org375e182"></a>
 
 ## Start the server
 
-with `$python application.py` since development sever does work with
-FlaskSocketIO (i.e `$ flask run`)
-
+In your terminal: `$ python application.py`
 
 <a id="org64d7643"></a>
 
-## Go to `127.0.0.1:5000/`
+## Navigate to `127.0.0.1:5000/`
 
-in your browser then type a name which will be your moniker to
-identify you in the chat
+in your browser then submit a name into the form.
+The submitted name will identify you in the chat.
 
 
 <a id="org9ced0ed"></a>
@@ -98,33 +110,25 @@ creation. So&#x2026; keep that in mind
 
 # `application.py`
 
-handles login/logout flow via http requests and leaves everything else
-to websockets.
+handles `login/logout` flow via HTTP requests.
 
 The nature of this flow is documented in the [FlaskSocketIO
 documentation](https://flask-socketio.readthedocs.io/en/latest/), and
-the author actually encourages this one for simplicity's sake. You'll
-only see `/leave`, `/` and `/adduser` as http routes.
+the author actually encourages this for simplicity's sake. You'll
+only see `/leave`, `/` and `/adduser` as HTTP routes.
 
 
 <a id="org71262cf"></a>
 
 ## Session vs localStorage
 
-One thing to note about the `/leave` route is that it does not remove
-the user from the database &#x2013; that is due to the nature of this
-chat app that assumes a user will chat quickly and then
-leave. Therefore, their name would become available to any other user,
-allowing a different person to claim the past username's messages.  By
-not erasing the user from the database during logout, I'm preventing
+The `/leave` route  does not remove the user from the database &#x2013;
+the app assumes a user will chat quickly and then leave.
+Therefore, their name would become available to any other user,
+allowing a different person to claim the previous username's messages.
+By not erasing the user from the database during logout, I'm preventing
 their username and their respective chat messages to be claimed by
 another person.
-
-I have thought a lot about this decision and decided to leave it that
-way. Since most likely this app will run as a development server, I do
-not see another reason to change this design decision. I would
-consider removing the user on the databse were I to deploy the app in
-a production server.
 
 Another thing is that the `/leave` route accepts AJAX requests because
 it will take care of clearing `localStorage` and sending a last
@@ -160,7 +164,7 @@ available chats in the "Live Channels" section.
 
 ## Channel creation
 
-channel creation, deletion, and sending of messages happen with
+ creation, deletion, and sending of messages happen with
 websockets.
 
 It may seem like there are too many websocket event handlers but I
